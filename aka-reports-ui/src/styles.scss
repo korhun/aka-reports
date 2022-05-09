@@ -1,1 +1,107 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@include mat.core(); //this mixin must be included exactly once!
+
+
+$al-brand: (
+  50: #e4e8f0,
+  100: #bcc6da,
+  200: #90a0c2,
+  300: #647aaa,
+  400: #425e97,
+  500: #214185,
+  600: #1d3b7d,
+  700: #183272,
+  800: #142a68,
+  900: #0b1c55,
+  A100: #bcc6da,
+  A200: #647aaa,
+  A400: #214185,
+  A700: #183272,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+// $algo-ui-primary: mat.define-palette(mat.$indigo-palette);
+$algo-ui-primary: mat.define-palette($al-brand);
+
+// $algo-ui-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$algo-ui-accent: mat.define-palette(mat.$pink-palette);
+// $algo-ui-accent: mat.define-palette($al-accent);
+
+// The warn palette is optional (defaults to red).
+$algo-ui-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$algo-ui-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $algo-ui-primary,
+      accent: $algo-ui-accent,
+      warn: $algo-ui-warn,
+    ),
+  )
+);
+$algo-ui-theme-dark: mat.define-dark-theme(
+  (
+    color: (
+      primary: $algo-ui-primary,
+      accent: $algo-ui-accent,
+      warn: $algo-ui-warn,
+    ),
+  )
+);
+
+:root {
+  --primary-color: #214185;;
+  --accent-color: #e91e63;
+  --accent-text-color: #ffffff;
+  --warn-color: rgb(175, 0, 0);
+
+  --background-color: yellow;
+  --background-contrast-color: #ffffff;
+  --color: red;
+}
+
+.light-theme {
+  @include mat.all-component-themes($algo-ui-theme);
+  --background-color: #eaf5ff;
+  --color: #000000;
+  --background-contrast-color: #ffffff;
+}
+.dark-theme {
+  @include mat.all-component-themes($algo-ui-theme-dark);
+  --background-color: #1a1a1a;
+  --color: #bebebe;
+  --background-contrast-color: #686868;
+}
+
+html,
+body {
+  height: 100%;
+}
+// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: "Montserrat-Extra Light", sans-serif;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

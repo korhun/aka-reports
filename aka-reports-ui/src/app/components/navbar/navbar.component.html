@@ -1,1 +1,30 @@
-<p>navbar works!</p>
+<mat-toolbar color="primary" class="navbar">
+  <div class="navbar-left">
+      <a mat-flat-button color="primary" href="https://www.orientis.ai/">
+          <img class="brand-logo" src="../../../assets/algomedicus_logo.png">
+          <span class="brand-name">Orientis AI</span>
+      </a>
+
+      <!-- <mat-divider vertical class="menudivider"></mat-divider> -->
+
+      <nav>
+          <a mat-button routerLinkActive="active" routerLink="/medigrafi">
+              <span>Aka Otomotiv</span>
+          </a>
+
+          <!-- <a mat-button routerLinkActive="active" routerLink="/mura">
+              <span>MURA</span>
+          </a> -->
+
+      </nav>
+  </div>
+  <div class="navbar-right">
+      <input type="checkbox" class="checkbox" id="chk" [(ngModel)]="isDarkTheme" />
+      <label class="label" for="chk">
+          <mat-icon class="day">light_mode</mat-icon>
+          <mat-icon class="night">dark_mode</mat-icon>
+          <div class="ball"></div>
+      </label>
+  </div>
+
+</mat-toolbar>

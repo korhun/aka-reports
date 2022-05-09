@@ -1,0 +1,16 @@
+@import "../styles.scss";
+
+.al-main {
+    height: 100%;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+}
+.al-navbar {
+    position: relative;
+    z-index: 1;
+}
+.al-router {
+    height: 100%;
+    overflow: auto;
+}
