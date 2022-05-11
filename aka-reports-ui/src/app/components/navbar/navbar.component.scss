@@ -1,8 +1,9 @@
 @import "../../../styles.scss";
 
 .brand-logo {
-    width: 5em;
-    padding: 0 8px 4px 0;
+    // width: 5em;
+    height: 4em;
+    padding: 0 0 0 0;
     margin-left: -3px;
 }
 .brand-name {
@@ -73,7 +74,7 @@
         padding: 0 1px 0 1px;
         position: relative;
         height: 12px;
-        width: 24px;
+        width: 22px;
         transform: scale(1.5);
     }
 

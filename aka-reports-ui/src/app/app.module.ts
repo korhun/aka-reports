@@ -11,11 +11,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { HandbrakeComponent } from './components/handbrake/handbrake.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
+    HandbrakeComponent,
   ],
   imports: [
     BrowserModule,
