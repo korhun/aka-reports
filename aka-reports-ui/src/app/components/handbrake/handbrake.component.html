@@ -22,10 +22,13 @@
                  [formControl]="barcodeSearchControl"
                  [matAutocomplete]="auto">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-              {{option}}
+            <mat-option *ngFor="let item of autoCompleteList | async" [value]="item">
+              {{item}}
             </mat-option>
           </mat-autocomplete>
+          <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </form>
 

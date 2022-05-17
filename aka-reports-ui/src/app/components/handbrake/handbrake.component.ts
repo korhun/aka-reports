@@ -3,9 +3,11 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { delay, filter, map, startWith } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
-// import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AkaReporterService } from 'src/app/services/aka-reporter.service';
+import { HandbrakeItem } from 'src/app/models/handbrake-item.model';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-handbrake',
@@ -17,29 +19,56 @@ export class HandbrakeComponent implements OnInit {
   // autocomplete_barcode: Observable<string[]>;
 
   barcodeSearchControl = new FormControl();
-  // options: string[] = ['aaa', 'ccc', 'Three'];
-  filteredOptions!: Observable<string[]>;
+  autoCompleteList: Observable<string[]> = of([]);
+  handbrakeItems: HandbrakeItem[] = [];
+
+  public get searchExists():boolean{
+    return this.barcodeSearchControl.value != null
+  }
 
 
   ngOnInit(): void {
-    this.filteredOptions = this.barcodeSearchControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
-    );
+    this.barcodeSearchControl.valueChanges.subscribe(value => this._search(value));
+    // this.filteredSearchResults = this.barcodeSearchControl.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._search(value)),
+    // );
   }
 
-  private _filter(value: string): string[] {
-    // const filterValue = value.toLowerCase();
-    return ["aaa", "bbb"]
+  private sort(arr: HandbrakeItem[]) {
+    if (arr)
+      return arr.sort((a, b) => (new Date(b.createDate)).getTime() - (new Date(a.createDate)).getTime());
+    else
+      return arr;
+  }
+  private _search(value: string): void {
+    this.akaReporterService.search(value).subscribe({
+      next: (response) => {
+        this.handbrakeItems = this.sort(response);
+        this.autoCompleteList = of(this.handbrakeItems.map(x => x.barcode));
+      },
+      error: (err) => {
+        console.log('HandbrakeComponent._search error: ' + err.message);
+      }
+    });
 
     // return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  public clearSearch() {
+    // this.autoCompleteList = of([]);
+    this.barcodeSearchControl.setValue(null)
   }
 
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
 
-  constructor(private observer: BreakpointObserver, private router: Router) {}
+  constructor(
+    private observer: BreakpointObserver,
+    private router: Router,
+    private akaReporterService: AkaReporterService) {
+  }
 
   // ngAfterViewInit() {
   //   this.observer
