@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { HandbrakeItem, HandbrakeItemHelper } from '../models/handbrake-item.model';
 
-const httpOptions = { headers: new HttpHeaders() }
+// const httpOptions = { headers: new HttpHeaders() }
 @Injectable({
   providedIn: 'root'
 })
 export class AkaReporterService {
-  private static _search_url: string = `api/search`;
+  private static _search_url: string = `api/searchHandbrakes`;
 
   constructor(private http: HttpClient) { }
   validate(item: HandbrakeItem): HandbrakeItem {
@@ -25,7 +25,7 @@ export class AkaReporterService {
     return this.http.get<HandbrakeItem[]>(AkaReporterService._search_url, {params: data}).pipe(
       map((items: HandbrakeItem[]) => items.map(item => this.validate(item)))
     );
-    
+
     // const limitTxt: String = limit > 0 ? `?limit=${limit}` : ""
     // const url: string = `${AkaReporterService._search_url}${limitTxt}`
     // return this.http.get<HandbrakeItem[]>(url).pipe(
