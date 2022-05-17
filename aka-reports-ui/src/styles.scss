@@ -89,8 +89,8 @@ $algo-ui-theme-dark: mat.define-dark-theme(
 .dark-theme {
   @include mat.all-component-themes($algo-ui-theme-dark);
   --background-color: #1a1a1a;
-  --color: #bebebe;
-  --background-contrast-color: #686868;
+  --color: #ffffe8;
+  --background-contrast-color: #6d6d6d;
 }
 
 html,
@@ -105,3 +105,24 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+// ::ng-deep .mat-focused .mat-form-field-label {
+//   /*change color of label*/
+//   color: var(--color) !important;
+//  }
+
+//  ::ng-deep.mat-form-field-underline {
+//   /*change color of underline*/
+//   background-color: var(--background-contrast-color) !important;
+// }
+
+// ::ng-deep.mat-form-field-ripple {
+//  /*change color of underline when focused*/
+//  background-color: var(--background-contrast-color) !important;
+// }
+
+// ::ng-deep.mat-form-field{
+//   background-color: gray !important;
+// }

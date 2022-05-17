@@ -1,1 +1,77 @@
-<p>handbrake works!</p>
+<ng-container>
+  <mat-toolbar class="example-header">Header</mat-toolbar>
+
+  <mat-sidenav-container class="search-container">
+    <mat-sidenav #sidenav mode="side" opened class="search-container-left" [fixedInViewport]=false>
+
+      <!-- <mat-form-field class="search-box" appearance="outline">
+        <mat-label>Barkodu</mat-label>
+        <input matInput type="text" [(ngModel)]="search_barcode">
+        <button *ngIf="search_barcode" matSuffix mat-icon-button aria-label="Clear" (click)="search_barcode=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field> -->
+
+      <form class="example-form">
+        <mat-form-field class="full-width" appearance="outline">
+          <!-- <mat-label>Barkod</mat-label> -->
+          <input type="text"
+                 placeholder="Barkod"
+                 aria-label="Barkod"
+                 matInput
+                 [formControl]="barcodeSearchControl"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <!-- <mat-toolbar class="example-footer">Footer</mat-toolbar> -->
+
+
+</ng-container>
+
+
+<!--
+    <mat-form-field class="search-box" appearance="fill">
+    <mat-label>Elcik Bul</mat-label>
+    <input matInput type="text" [(ngModel)]="search_value">
+    <button *ngIf="search_value" matSuffix mat-icon-button aria-label="Clear" (click)="search_value=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+
+ <mat-sidenav-container class="search-container">
+    <mat-sidenav #sidenav mode="side" opened class="search-container-left" [fixedInViewport]=false>
+
+        <mat-form-field class="search-box" appearance="outline">
+          <mat-label>Barkodu</mat-label>
+          <input matInput type="text" [(ngModel)]="search_barcode">
+          <button *ngIf="search_barcode" matSuffix mat-icon-button aria-label="Clear" (click)="search_barcode=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+-->
