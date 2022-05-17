@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ReportsHandler(BaseHandler, ABC):
+class SearchHandbrakesHandler(BaseHandler, ABC):
 
     def post(self):
         self.write({
