@@ -1,4 +1,4 @@
-import { HandbreakItem } from './handbreak-item';
+import { HandbreakItem } from './handbreak-item.model';
 
 describe('HandbreakItem', () => {
   it('should create an instance', () => {
