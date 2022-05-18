@@ -79,7 +79,8 @@
               "browserTarget": "aka-reports-ui:build:production"
             },
             "development": {
-              "browserTarget": "aka-reports-ui:build:development"
+              "browserTarget": "aka-reports-ui:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

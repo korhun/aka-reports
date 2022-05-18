@@ -24,7 +24,7 @@ class HandbrakeHandler(BaseHandler, ABC):
 
         self.set_header('Content-Type', 'application/json')
         res = {
-            "barcode": "aldjfşalkdsjfşalkdsf",
+            "barcode": "deneme deneme2",
             "createDate": None
         }
         self.write(json.dumps(res))
