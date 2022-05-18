@@ -17,17 +17,37 @@ logger = logging.getLogger(__name__)
 
 class HandbrakeHandler(BaseHandler, ABC):
 
+    def _search(self, search_text, limit):
+        if search_text:
+            res = [
+                {
+                    "barcode": search_text,
+                    "createDate": None
+                },
+                {
+                    "barcode": "deneme deneme",
+                    "createDate": None
+                },
+                {
+                    "barcode": "deneme2 deneme2",
+                    "createDate": None
+                }
+            ]
+            return res
+
+        return []
+
     def get(self):
         args = self.request.arguments if self.request and self.request.arguments else None
         if args is None:
             self.set_status(404)
+        else:
+            search_text = self.get_argument('search_text', None)
+            limit = self.get_argument('limit', None)
+            res = self._search(search_text, limit)
 
-        self.set_header('Content-Type', 'application/json')
-        res = {
-            "barcode": "deneme deneme2",
-            "createDate": None
-        }
-        self.write(json.dumps(res))
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(res))
 
 #     prj = self.db.find_project(prj_id)
 #     if prj is None:
