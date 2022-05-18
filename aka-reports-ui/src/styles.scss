@@ -107,6 +107,9 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
+input, textarea {
+  caret-color: var(--color) !important;
+}
 
 // ::ng-deep .mat-focused .mat-form-field-label {
 //   /*change color of label*/
