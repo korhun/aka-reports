@@ -63,6 +63,10 @@ export class HandbrakeComponent implements OnInit {
     // return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
+  public applySearch(){
+    this._search(this.barcodeSearchControl.value)
+  }
+
   public clearSearch() {
     // this.autoCompleteList = of([]);
     this.barcodeSearchControl.setValue("")

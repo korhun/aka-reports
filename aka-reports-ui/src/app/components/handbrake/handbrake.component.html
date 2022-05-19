@@ -15,12 +15,8 @@
       <form class="example-form">
         <mat-form-field class="full-width" appearance="outline">
           <!-- <mat-label>Barkod</mat-label> -->
-          <input type="text"
-                 placeholder="Elcik Barkodu Ara"
-                 aria-label="Elcik Barkodu Ara"
-                 matInput
-                 [formControl]="barcodeSearchControl"
-                 [matAutocomplete]="auto">
+          <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
+            [formControl]="barcodeSearchControl" [matAutocomplete]="auto">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             <mat-option *ngFor="let item of autoCompleteList | async" [value]="item">
               {{item}}
@@ -28,6 +24,9 @@
           </mat-autocomplete>
           <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()">
             <mat-icon>close</mat-icon>
+          </button>
+          <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="apply search" (click)="applySearch()">
+            <mat-icon>search</mat-icon>
           </button>
         </mat-form-field>
       </form>
