@@ -6,7 +6,7 @@ from utils import file_helper, string_helper
 from utils.label_file import LabelFile
 
 _dir_to_keys = {}
-_key_to_handbrakes = {}
+_key_to_handbrake = {}
 _barcode_to_keys = {}
 
 
@@ -32,10 +32,11 @@ def _label_has_fault(label_fn):
     return False
 
 
-def _create_handbrake(barcode, dir_path):
+def _create_handbrake(key, barcode, dir_path):
     """
     :return: None or
     {
+        "key": string,
         "barcode": string,
         "has_fault": boolean,
         "cam0":
@@ -50,7 +51,10 @@ def _create_handbrake(barcode, dir_path):
     """
     img_exists = False
     has_fault = False
-    res = {"barcode": barcode}
+    res = {
+        "key": key,
+        "barcode": barcode
+    }
     for i, suffix in enumerate(["_cam0", "_cam1", "_cam2", "_cam3"]):
         cam_data = {
             "image_fn": None,
@@ -84,7 +88,7 @@ def _create_handbrake(barcode, dir_path):
 
 def set_workspace_dir(workspace_dir):
     _dir_to_keys.clear()
-    _key_to_handbrakes.clear()
+    _key_to_handbrake.clear()
     _barcode_to_keys.clear()
 
     for dir_path in file_helper.enumerate_directories(workspace_dir, recursive=False):
@@ -93,26 +97,45 @@ def set_workspace_dir(workspace_dir):
         for fn in file_helper.enumerate_files(dir_path, recursive=False, wildcard_pattern="*_cam0.png", case_insensitive=True):
             dir_name, name, extension = file_helper.get_file_name_extension(fn)
             barcode = name[:-5]
-            handbrake = _create_handbrake(barcode, dir_path)
+            key = f"{dir_name}_{barcode}"
+            handbrake = _create_handbrake(key, barcode, dir_path)
             if handbrake:
-                key = f"{dir_name}_{barcode}"
                 keys.append(key)
-                _key_to_handbrakes[key] = handbrake
+                _key_to_handbrake[key] = handbrake
                 if barcode in _barcode_to_keys:
                     _barcode_to_keys[barcode].append(key)
                 else:
                     _barcode_to_keys[barcode] = [key]
 
 
-def find_handbrakes_by_barcode(barcode_pattern, limit):
-    if barcode_pattern:
+def get_handbrake_info(key, options):
+    """
+        options: optional ["only_barcode", "include_thumbs"]
+    """
+    handbrake = _key_to_handbrake[key]
+    if "only_barcode" in options:
+        return handbrake["barcode"]
+    res = {
+        "barcode": handbrake["barcode"],
+        "has_fault": handbrake["has_fault"],
+    }
+    if "include_thumbs" in options:
+        raise NotImplementedError()
+    return res
+
+
+def search_handbrakes(barcode_pattern, limit, options):
+    if limit and barcode_pattern:
         pattern = f"*{barcode_pattern}*"
+        i = 0
         for barcode, keys in _barcode_to_keys.items():
             if string_helper.wildcard(barcode, pattern, case_insensitive=True):
                 for key in keys:
-                    yield _key_to_handbrakes[key]
+                    yield get_handbrake_info(key, options)
+                    i += 1
+                    if i == limit:
+                        return
 
 
 def search_barcodes(search_text, limit):
-    for handbrake in find_handbrakes_by_barcode(search_text, limit):
-        yield handbrake["barcode"]
+    return search_handbrakes(search_text, limit, options=["only_barcodes"])

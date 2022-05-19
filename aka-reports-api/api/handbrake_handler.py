@@ -34,21 +34,50 @@ class HandbrakeHandler(BaseHandler, ABC):
     # ):
     #     super(HandbrakeHandler, self).__init__(application, request, **kwargs)
 
+    """
+    error status
+    400 Bad Request – client sent an invalid request, such as lacking required request body or parameter
+    401 Unauthorized – client failed to authenticate with the server
+    403 Forbidden – client authenticated but does not have permission to access the requested resource
+    404 Not Found – the requested resource does not exist
+    412 Precondition Failed – one or more conditions in the request header fields evaluated to false
+    500 Internal Server Error – a generic error occurred on the server
+    503 Service Unavailable – the requested service is not available
+    """
+
+    def _search_barcodes(self):
+        search_text = self.get_argument('search_text', None)
+        limit = self.get_argument('limit', None)
+        if limit:
+            limit = int(limit)
+        else:
+            limit = 50
+        return list(handbrake_manager.search_barcodes(search_text, limit))
+
+    def _search_handbrakes(self):
+        search_text = self.get_argument('search_text', None)
+        limit = self.get_argument('limit', None)
+        options = self.get_argument('options', None)
+        if limit:
+            limit = int(limit)
+        else:
+            limit = 50
+        return list(handbrake_manager.search_handbrakes(search_text, limit, options))
+
     def get(self):
         args = self.request.arguments if self.request and self.request.arguments else None
         if args is None:
-            self.set_status(404)
-        else:
-            search_text = self.get_argument('search_text', None)
-            limit = self.get_argument('limit', None)
-            if not limit:
-                limit = 50
-            else:
-                limit = int(limit)
-            # res = [x["barcode"] for x in handbrake_manager.find_handbrakes_by_barcode(search_text, limit)]
-            res = list(handbrake_manager.find_handbrakes_by_barcode(search_text, limit))
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(res))
+            self.set_status(400)
+            return
+
+        search_text = self.get_argument('search_text', None)
+        limit = self.get_argument('limit', None)
+        options = self.get_argument('options', None)
+
+        res = list(handbrake_manager.search_handbrakes(search_text, limit, options))
+
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(res))
 
 #     prj = self.db.find_project(prj_id)
 #     if prj is None:

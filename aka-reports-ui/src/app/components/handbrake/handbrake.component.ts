@@ -23,12 +23,12 @@ export class HandbrakeComponent implements OnInit {
   handbrakeItems: HandbrakeItem[] = [];
 
   public get searchExists():boolean{
-    return this.barcodeSearchControl.value != null
+    return this.barcodeSearchControl.value != null && this.barcodeSearchControl.value != ''
   }
 
 
   ngOnInit(): void {
-    this.barcodeSearchControl.valueChanges.subscribe(value => this._search(value));
+    this.barcodeSearchControl.valueChanges.subscribe(value => this._updateAutoCompleteList(value));
     // this.filteredSearchResults = this.barcodeSearchControl.valueChanges.pipe(
     //   startWith(''),
     //   map(value => this._search(value)),
@@ -41,17 +41,25 @@ export class HandbrakeComponent implements OnInit {
     else
       return arr;
   }
+  private _updateAutoCompleteList(value: string): void {
+    this.akaReporterService.searchBarcodes(value).subscribe({
+      next: (response) => {
+        this.autoCompleteList = of(response);
+      },
+      error: (err) => {
+        console.log('HandbrakeComponent._updateAutoCompleteList error: ' + err.message);
+      }
+    });
+  }
   private _search(value: string): void {
-    this.akaReporterService.search(value).subscribe({
+    this.akaReporterService.searchHandbrakes(value).subscribe({
       next: (response) => {
         this.handbrakeItems = this.sort(response);
-        this.autoCompleteList = of(this.handbrakeItems.map(x => x.barcode));
       },
       error: (err) => {
         console.log('HandbrakeComponent._search error: ' + err.message);
       }
     });
-
     // return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 

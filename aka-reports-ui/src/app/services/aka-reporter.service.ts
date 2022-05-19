@@ -8,7 +8,7 @@ import { HandbrakeItem, HandbrakeItemHelper } from '../models/handbrake-item.mod
   providedIn: 'root'
 })
 export class AkaReporterService {
-  private static _search_url: string = `api/searchHandbrakes`;
+  private static _search_url: string = `api/handbrake`;
 
   constructor(private http: HttpClient) { }
   validate(item: HandbrakeItem): HandbrakeItem {
@@ -17,7 +17,15 @@ export class AkaReporterService {
     return item;
   }
 
-  search(search_text: string, limit: number = 50): Observable<HandbrakeItem[]> {
+  searchBarcodes(search_text: string, limit: number = 50): Observable<string[]> {
+    let data = {
+      search_text: search_text,
+      limit: limit,
+      options: ["only_barcode"]
+    };
+    return this.http.get<string[]>(AkaReporterService._search_url, {params: data});
+  }
+  searchHandbrakes(search_text: string, limit: number = 50): Observable<HandbrakeItem[]> {
     let data = {
       search_text: search_text,
       limit: limit
