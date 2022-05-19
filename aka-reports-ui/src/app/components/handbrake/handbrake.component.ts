@@ -20,9 +20,10 @@ export class HandbrakeComponent implements OnInit {
 
   barcodeSearchControl = new FormControl();
   autoCompleteList: Observable<string[]> = of([]);
-  handbrakeItems: HandbrakeItem[] = [];
+  // handbrakeItems: HandbrakeItem[] = [];
+  handbrakeItems: Observable<HandbrakeItem[]> = of([]);
 
-  public get searchExists():boolean{
+  public get searchExists(): boolean {
     return this.barcodeSearchControl.value != null && this.barcodeSearchControl.value != ''
   }
 
@@ -51,10 +52,10 @@ export class HandbrakeComponent implements OnInit {
       }
     });
   }
-  private _search(value: string): void {
+  public search(value: string): void {
     this.akaReporterService.searchHandbrakes(value).subscribe({
       next: (response) => {
-        this.handbrakeItems = this.sort(response);
+        this.handbrakeItems = of(this.sort(response));
       },
       error: (err) => {
         console.log('HandbrakeComponent._search error: ' + err.message);
@@ -63,13 +64,14 @@ export class HandbrakeComponent implements OnInit {
     // return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  public applySearch(){
-    this._search(this.barcodeSearchControl.value)
+  public applySearch() {
+    this.search(this.barcodeSearchControl.value)
   }
 
   public clearSearch() {
     // this.autoCompleteList = of([]);
     this.barcodeSearchControl.setValue("")
+    this.applySearch()
   }
 
 

@@ -1,5 +1,5 @@
 <ng-container>
-  <mat-toolbar class="example-header">Header</mat-toolbar>
+  <!-- <mat-toolbar class="example-header">Header</mat-toolbar> -->
 
   <mat-sidenav-container class="search-container">
     <mat-sidenav #sidenav mode="side" opened class="search-container-left" [fixedInViewport]=false>
@@ -18,8 +18,8 @@
           <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
             [formControl]="barcodeSearchControl" [matAutocomplete]="auto">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let item of autoCompleteList | async" [value]="item">
-              {{item}}
+            <mat-option *ngFor="let option of autoCompleteList | async" [value]="option" (onSelectionChange)="search(option)">
+              {{option}}
             </mat-option>
           </mat-autocomplete>
           <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()">
@@ -34,7 +34,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-
+      <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
 
 
     </mat-sidenav-content>
