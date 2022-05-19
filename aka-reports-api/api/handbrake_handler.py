@@ -45,25 +45,6 @@ class HandbrakeHandler(BaseHandler, ABC):
     503 Service Unavailable – the requested service is not available
     """
 
-    def _search_barcodes(self):
-        search_text = self.get_argument('search_text', None)
-        limit = self.get_argument('limit', None)
-        if limit:
-            limit = int(limit)
-        else:
-            limit = 50
-        return list(handbrake_manager.search_barcodes(search_text, limit))
-
-    def _search_handbrakes(self):
-        search_text = self.get_argument('search_text', None)
-        limit = self.get_argument('limit', None)
-        options = self.get_argument('options', None)
-        if limit:
-            limit = int(limit)
-        else:
-            limit = 50
-        return list(handbrake_manager.search_handbrakes(search_text, limit, options))
-
     def get(self):
         args = self.request.arguments if self.request and self.request.arguments else None
         if args is None:
@@ -74,7 +55,7 @@ class HandbrakeHandler(BaseHandler, ABC):
         limit = self.get_argument('limit', None)
         options = self.get_argument('options', None)
 
-        res = list(handbrake_manager.search_handbrakes(search_text, limit, options))
+        res = list(handbrake_manager.search(search_text, limit, options))
 
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(res))

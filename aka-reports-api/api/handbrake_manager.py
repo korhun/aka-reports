@@ -113,18 +113,18 @@ def get_handbrake_info(key, options):
         options: optional ["only_barcode", "include_thumbs"]
     """
     handbrake = _key_to_handbrake[key]
-    if "only_barcode" in options:
+    if options and "only_barcode" in options:
         return handbrake["barcode"]
     res = {
         "barcode": handbrake["barcode"],
         "has_fault": handbrake["has_fault"],
     }
-    if "include_thumbs" in options:
+    if options and "include_thumbs" in options:
         raise NotImplementedError()
     return res
 
 
-def search_handbrakes(barcode_pattern, limit, options):
+def search(barcode_pattern, limit, options):
     if limit and barcode_pattern:
         pattern = f"*{barcode_pattern}*"
         i = 0
@@ -135,7 +135,3 @@ def search_handbrakes(barcode_pattern, limit, options):
                     i += 1
                     if i == limit:
                         return
-
-
-def search_barcodes(search_text, limit):
-    return search_handbrakes(search_text, limit, options=["only_barcodes"])
