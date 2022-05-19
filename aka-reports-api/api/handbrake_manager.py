@@ -7,15 +7,30 @@ from utils.label_file import LabelFile
 
 _dir_to_keys = {}
 _key_to_handbrakes = {}
+_barcode_to_keys = {}
+
+
+def _enumerate_labels(label_fn):
+    def get_shape_name():
+        return shape["label"] if shape and "label" in shape and shape["label"] else None
+
+    label = LabelFile(label_fn)
+    if label.shapes:
+        try:
+            for shape in label.shapes:
+                shape_name = get_shape_name()
+                if shape_name:
+                    yield shape_name
+        except GeneratorExit:
+            del label
 
 
 def _label_has_fault(label_fn):
-    label = LabelFile(label_fn)
-    if label.shapes:
-        for shape in label.shapes:
-            if not (shape.name and shape.name.lower() == "hatasız"):
-                return True
+    for label_name in _enumerate_labels(label_fn):
+        if label_name.lower() != "hatasız":
+            return True
     return False
+
 
 def _create_handbrake(barcode, dir_path):
     """
@@ -70,32 +85,34 @@ def _create_handbrake(barcode, dir_path):
 def set_workspace_dir(workspace_dir):
     _dir_to_keys.clear()
     _key_to_handbrakes.clear()
+    _barcode_to_keys.clear()
 
     for dir_path in file_helper.enumerate_directories(workspace_dir, recursive=False):
         keys = []
         _dir_to_keys[dir_path] = keys
-        for fn in file_helper.enumerate_files(dir_path, recursive=False, wildcard_pattern="_cam*.png", case_insensitive=True):
+        for fn in file_helper.enumerate_files(dir_path, recursive=False, wildcard_pattern="*_cam0.png", case_insensitive=True):
             dir_name, name, extension = file_helper.get_file_name_extension(fn)
-            if name.endswith("_cam0"):
-                barcode = name[:-4]
+            barcode = name[:-5]
+            handbrake = _create_handbrake(barcode, dir_path)
+            if handbrake:
                 key = f"{dir_name}_{barcode}"
                 keys.append(key)
-                handbrake = _create_handbrake(barcode, dir_path)
-                if handbrake:
+                _key_to_handbrakes[key] = handbrake
+                if barcode in _barcode_to_keys:
+                    _barcode_to_keys[barcode].append(key)
+                else:
+                    _barcode_to_keys[barcode] = [key]
 
 
-
-def find_by_barcode(barcode_pattern, limit):
+def find_handbrakes_by_barcode(barcode_pattern, limit):
     if barcode_pattern:
         pattern = f"*{barcode_pattern}*"
-        count = 0
-        for handbrake in _handbrakes:
-            barcode
-            if string_helper.wildcard(fn, pattern, case_insensitive=True):
-                yield {
-                    "barcode": fn,
-                    "createDate": None
-                }
-                count += 1
-                if count >= limit:
-                    return
+        for barcode, keys in _barcode_to_keys.items():
+            if string_helper.wildcard(barcode, pattern, case_insensitive=True):
+                for key in keys:
+                    yield _key_to_handbrakes[key]
+
+
+def search_barcodes(search_text, limit):
+    for handbrake in find_handbrakes_by_barcode(search_text, limit):
+        yield handbrake["barcode"]

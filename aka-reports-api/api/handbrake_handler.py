@@ -2,40 +2,37 @@ import json
 import os
 import random
 import string
+from typing import Any
+
 import cv2
 import numpy
 from abc import ABC
 
+import yaml
+from tornado import httputil
 from tornado.escape import json_decode
 
+from tornado.web import RequestHandler, Application
+
+from api import handbrake_manager
 from api.base_handler import BaseHandler
 
 import logging
+
+from utils import file_helper
 
 logger = logging.getLogger(__name__)
 
 
 class HandbrakeHandler(BaseHandler, ABC):
 
-    def _search(self, search_text, limit):
-        if search_text:
-            res = [
-                {
-                    "barcode": search_text,
-                    "createDate": None
-                },
-                {
-                    "barcode": "deneme deneme",
-                    "createDate": None
-                },
-                {
-                    "barcode": "deneme2 deneme2",
-                    "createDate": None
-                }
-            ]
-            return res
-
-        return []
+    # def __init__(
+    #         self,
+    #         application: "Application",
+    #         request: httputil.HTTPServerRequest,
+    #         **kwargs: Any
+    # ):
+    #     super(HandbrakeHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
         args = self.request.arguments if self.request and self.request.arguments else None
@@ -44,8 +41,12 @@ class HandbrakeHandler(BaseHandler, ABC):
         else:
             search_text = self.get_argument('search_text', None)
             limit = self.get_argument('limit', None)
-            res = self._search(search_text, limit)
-
+            if not limit:
+                limit = 50
+            else:
+                limit = int(limit)
+            # res = [x["barcode"] for x in handbrake_manager.find_handbrakes_by_barcode(search_text, limit)]
+            res = list(handbrake_manager.find_handbrakes_by_barcode(search_text, limit))
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(res))
 

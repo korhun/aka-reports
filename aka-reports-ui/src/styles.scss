@@ -111,6 +111,29 @@ input, textarea {
   caret-color: var(--color) !important;
 }
 
+
+
+// ::ng-deep .mat-option, .mat-autocomplete-panel{
+//   background-color:  var(--background-color) !important;
+//   color: var(--color) !important;
+// }
+
+// .app-overlay-container {
+//   position: absolute;
+//   z-index: 1000;
+//   pointer-events: none;
+//   top: 0;
+//   left: 0;
+//   height: 100%;
+//   width: 100%;
+// }
+
+
+// ::ng-deep .mat-autocomplete-panel{
+//   background-color:  var(--background-color) !important;
+//   color: var(--color) !important;
+// }
+
 // ::ng-deep .mat-focused .mat-form-field-label {
 //   /*change color of label*/
 //   color: var(--color) !important;
