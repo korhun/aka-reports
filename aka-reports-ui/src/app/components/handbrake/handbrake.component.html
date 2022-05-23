@@ -1,24 +1,17 @@
 <ng-container>
   <!-- <mat-toolbar class="example-header">Header</mat-toolbar> -->
 
-  <mat-sidenav-container class="search-container">
-    <mat-sidenav #sidenav mode="side" opened class="search-container-left" [fixedInViewport]=false>
 
-      <!-- <mat-form-field class="search-box" appearance="outline">
-        <mat-label>Barkodu</mat-label>
-        <input matInput type="text" [(ngModel)]="search_barcode">
-        <button *ngIf="search_barcode" matSuffix mat-icon-button aria-label="Clear" (click)="search_barcode=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field> -->
+  <div class="search-container">
 
-      <form class="example-form">
+    <div class="search-container-left" >
+      <form class="handbrake-form">
         <mat-form-field class="full-width" appearance="outline">
-          <!-- <mat-label>Barkod</mat-label> -->
           <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
-            [formControl]="barcodeSearchControl" [matAutocomplete]="auto">
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of autoCompleteList | async" [value]="option" (onSelectionChange)="search(option)">
+            [formControl]="barcodeSearchControl" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
+          <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete">
+            <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
+              (onSelectionChange)="search(option)">
               {{option}}
             </mat-option>
           </mat-autocomplete>
@@ -31,14 +24,53 @@
         </mat-form-field>
       </form>
 
+
+    </div>
+
+    <div class="search-container-right">
+
+
+      <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
+
+
+    </div>
+
+  </div>
+
+  <!-- <mat-sidenav-container class="search-container">
+
+    <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="search-container-left" [fixedInViewport]=false>
+      <form class="handbrake-form">
+        <mat-form-field class="full-width" appearance="outline">
+          <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
+            [formControl]="barcodeSearchControl" [matAutocomplete]="auto">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
+              (onSelectionChange)="search(option)">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+          <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <button matSuffix mat-icon-button color="basic" aria-label="apply search" (click)="applySearch()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
+
+
     </mat-sidenav>
 
-    <mat-sidenav-content>
+    <mat-sidenav-content class="search-container-right">
+
+
       <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
 
 
     </mat-sidenav-content>
-  </mat-sidenav-container>
+
+  </mat-sidenav-container> -->
 
   <!-- <mat-toolbar class="example-footer">Footer</mat-toolbar> -->
 

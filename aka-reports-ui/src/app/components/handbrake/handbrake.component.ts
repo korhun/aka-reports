@@ -69,7 +69,6 @@ export class HandbrakeComponent implements OnInit {
   }
 
   public clearSearch() {
-    // this.autoCompleteList = of([]);
     this.barcodeSearchControl.setValue("")
     this.applySearch()
   }

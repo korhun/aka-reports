@@ -82,15 +82,15 @@ $algo-ui-theme-dark: mat.define-dark-theme(
 
 .light-theme {
   @include mat.all-component-themes($algo-ui-theme);
-  --background-color: #eaf5ff;
   --color: #000000;
+  --background-color: #eaf5ff;
   --background-contrast-color: #ffffff;
 }
 .dark-theme {
   @include mat.all-component-themes($algo-ui-theme-dark);
+  --color: #e4e4e4;
   --background-color: #1a1a1a;
-  --color: #ffffe8;
-  --background-contrast-color: #6d6d6d;
+  --background-contrast-color: #303030;
 }
 
 html,
@@ -109,7 +109,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 input, textarea {
   caret-color: var(--color) !important;
+  color: var(--color) !important;
 }
+
+mat-icon {
+  color: var(--color) !important;
+}
+
 
 
 
