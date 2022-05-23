@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HandbrakeComponent } from './components/handbrake/handbrake.component';
 
 const routes: Routes = [
-  // { path: 'medigrafi', component: MedigrafiComponent },
+  { path: '', redirectTo: '/handbrake', pathMatch: 'full' },
   { path: 'handbrake', component: HandbrakeComponent }
 ];
 
