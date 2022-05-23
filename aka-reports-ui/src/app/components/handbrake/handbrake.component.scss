@@ -17,6 +17,10 @@
 
   color: var(--color);
   background-color: var(--background-color);
+
+}
+.search-left {
+    padding: 1em;
 }
 
 .search-container-right {
@@ -29,6 +33,10 @@
   color: var(--color);
   background-color: var(--background-color);
 }
+.search-right {
+  padding: 1em;
+}
+
 
 .full-width{
   width: 100%;
