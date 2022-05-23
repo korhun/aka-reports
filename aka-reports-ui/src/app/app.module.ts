@@ -13,6 +13,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HandbrakeComponent } from './components/handbrake/handbrake.component';
 import { HandbrakeItemComponent } from './components/handbrake-item/handbrake-item.component';
+import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { HandbrakeItemComponent } from './components/handbrake-item/handbrake-it
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    AngularSplitModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

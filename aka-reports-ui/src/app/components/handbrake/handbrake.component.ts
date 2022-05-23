@@ -9,6 +9,7 @@ import { AkaReporterService } from 'src/app/services/aka-reporter.service';
 import { HandbrakeItem } from 'src/app/models/handbrake-item.model';
 import { ThisReceiver } from '@angular/compiler';
 
+import { AngularSplitModule } from 'angular-split';
 @Component({
   selector: 'app-handbrake',
   templateUrl: './handbrake.component.html',

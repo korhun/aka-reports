@@ -3,39 +3,46 @@
 
 
   <div class="search-container">
+    <as-split direction="horizontal">
 
-    <div class="search-container-left" >
-      <form class="handbrake-form">
-        <mat-form-field class="full-width" appearance="outline">
-          <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
-            [formControl]="barcodeSearchControl" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
-          <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete">
-            <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
-              (onSelectionChange)="search(option)">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-          <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()">
-            <mat-icon>close</mat-icon>
-          </button>
-          <button matSuffix mat-icon-button color="basic" aria-label="apply search" (click)="applySearch()">
-            <mat-icon>search</mat-icon>
-          </button>
-        </mat-form-field>
-      </form>
+      <as-split-area [size]="20">
+        <div class="search-container-left">
 
+          <form class="handbrake-form">
+            <mat-form-field class="full-width" appearance="outline">
+              <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
+                [formControl]="barcodeSearchControl" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
+              <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete">
+                <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
+                  (onSelectionChange)="search(option)">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+              <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()"
+                type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button matSuffix mat-icon-button color="basic" aria-label="apply search" (click)="applySearch()"
+                type="button">
+                <mat-icon>search</mat-icon>
+              </button>
+            </mat-form-field>
+          </form>
 
-    </div>
+        </div>
+      </as-split-area>
 
-    <div class="search-container-right">
+      <as-split-area [size]="80">
+        <div class="search-container-right">
 
+          <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
 
-      <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
+        </div>
+      </as-split-area>
 
-
-    </div>
-
+    </as-split>
   </div>
+
 
   <!-- <mat-sidenav-container class="search-container">
 

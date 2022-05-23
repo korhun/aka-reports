@@ -1,6 +1,5 @@
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 @include mat.core(); //this mixin must be included exactly once!
-
 
 $al-brand: (
   50: #e4e8f0,
@@ -70,7 +69,7 @@ $algo-ui-theme-dark: mat.define-dark-theme(
 );
 
 :root {
-  --primary-color: #214185;;
+  --primary-color: #214185;
   --accent-color: #e91e63;
   --accent-text-color: #ffffff;
   --warn-color: rgb(175, 0, 0);
@@ -103,11 +102,17 @@ body {
   font-family: "Montserrat-Extra Light", sans-serif;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-
-input, textarea {
+input,
+textarea {
   caret-color: var(--color) !important;
   color: var(--color) !important;
 }
@@ -117,7 +122,42 @@ mat-icon {
 }
 
 
+// .as-split-area {
+//   background-color: lightgrey;
 
+//   // & > p {
+//   //   padding: 5px;
+//   // }
+// }
+
+::ng-deep .as-split-gutter {
+  background-color: var(--background-contrast-color) !important;
+}
+::ng-deep .as-split-area {
+  height: auto !important;
+
+}
+
+// ::ng-deep .as-split-gutter-icon {
+//   background-image: none !important;
+//   background-color: black;
+//   transition: opacity 0.3s;
+//   opacity: 0;
+//   position: absolute;
+// }
+
+// ::ng-deep .as-split-gutter.as-dragged .as-split-gutter-icon,
+// ::ng-deep .as-split-gutter-icon:hover {
+//   opacity: 0.1;
+// }
+
+// &.as-vertical {
+//   ::ng-deep > .as-split-gutter > .as-split-gutter-icon {
+//     height: 17px !important;
+//     top: -8px;
+//     bottom: 8px;
+//   }
+// }
 
 // ::ng-deep .mat-option, .mat-autocomplete-panel{
 //   background-color:  var(--background-color) !important;
@@ -133,7 +173,6 @@ mat-icon {
 //   height: 100%;
 //   width: 100%;
 // }
-
 
 // ::ng-deep .mat-autocomplete-panel{
 //   background-color:  var(--background-color) !important;
