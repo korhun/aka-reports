@@ -39,7 +39,7 @@ export class HandbrakeComponent implements OnInit {
 
   private sort(arr: HandbrakeItem[]) {
     if (arr)
-      return arr.sort((a, b) => (new Date(b.createDate)).getTime() - (new Date(a.createDate)).getTime());
+      return arr.sort((a, b) => (new Date(b.time)).getTime() - (new Date(a.time)).getTime());
     else
       return arr;
   }
