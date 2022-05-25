@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
-import { HandbrakeItem, HandbrakeItemHelper } from "../models/handbrake-item.model";
+import { HandbrakeItem, HandbrakeHelper, HandbrakeSearchOptions } from "../models/handbrake-item.model";
 
 @Injectable({
   providedIn: 'root'
@@ -36,25 +36,21 @@ export class HandbrakeService {
   // }
 
 
-  findHandbrakes(barcodeFilter = '', sortOrder = 'asc', pageNumber = 0, pageSize = 3): Observable<HandbrakeItem[]> {
+  findHandbrakes(options: HandbrakeSearchOptions): Observable<HandbrakeItem[]> {
     return this.http.get('/api/handbrake', {
       params: new HttpParams()
-        .set('barcodeFilter', barcodeFilter)
-        .set('sortOrder', sortOrder)
-        .set('pageNumber', pageNumber.toString())
-        .set('pageSize', pageSize.toString())
+        .set('options', JSON.stringify(options))
     }).pipe(
-      // map(res => HandbrakeItemHelper.getHandbrakeItems(res))
-      map(items => HandbrakeItemHelper.getHandbrakeItems(items))
-      // map((items: HandbrakeItem[]) => items.map(item => HandbrakeItemHelper.validate(item)))
+      map(items => HandbrakeHelper.getHandbrakeItems(items))
     );
   }
-  findHandbrakesCount(barcodeFilter = ''): Observable<object> {
+  findHandbrakesCount(options: HandbrakeSearchOptions): Observable<number> {
     return this.http.get('/api/handbrake', {
       params: new HttpParams()
-        .set('barcodeFilter', barcodeFilter)
-        .set('options', "only_count")
-    });
+        .set('options', JSON.stringify(HandbrakeHelper.createOptionsForCount(options)))
+    }).pipe(
+      map(count => +count)
+    );
   }
 
   // findHandbrakes(

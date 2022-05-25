@@ -1,7 +1,7 @@
 import { CollectionViewer, DataSource } from "@angular/cdk/collections";
 import { Observable, BehaviorSubject, of } from "rxjs";
 import { catchError, finalize } from "rxjs/operators";
-import { HandbrakeItem } from "../models/handbrake-item.model";
+import { HandbrakeHelper, HandbrakeItem, HandbrakeSearchOptions } from "../models/handbrake-item.model";
 import { HandbrakeService } from "./handbrake.service";
 
 
@@ -20,18 +20,16 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
 
   }
 
-  loadHandbrakes(barcodeFilter: string, sortDirection: string, pageIndex: number, pageSize: number) {
+  loadHandbrakes(options: HandbrakeSearchOptions) {
     this.loadingSubject.next(true);
-    if (barcodeFilter == null)
-      barcodeFilter = ""
-    this.handbrakeService.findHandbrakes(barcodeFilter, sortDirection, pageIndex, pageSize).pipe(
+    this.handbrakeService.findHandbrakes(options).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))
     ).subscribe(handbrakes => this.handbrakesSubject.next(handbrakes));
 
-    this.handbrakeService.findHandbrakesCount(barcodeFilter).pipe(
-      catchError(() => of([]))
-    ).subscribe(len => this.lengthSubject.next(+len));
+    this.handbrakeService.findHandbrakesCount(options).pipe(
+      catchError(() => of([])),
+    ).subscribe(count => this.lengthSubject.next(+count));
   }
 
   connect(collectionViewer: CollectionViewer): Observable<HandbrakeItem[]> {

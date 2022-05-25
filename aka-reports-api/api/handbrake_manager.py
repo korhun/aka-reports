@@ -144,30 +144,78 @@ def get_handbrake_info(key, options):
     return res
 
 
-def search(barcode_filter, ascending, page_number, page_size, options):
+def search(options):
+
+    def is_ok():
+        if not (no_pattern or string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True)):
+            return False
+        if include_fault and include_no_fault:
+            return True
+        handbrake = _key_to_handbrake[key]
+        if not include_fault and handbrake["has_fault"]:
+            return False
+        if not include_no_fault and not handbrake["has_fault"]:
+            return False
+        return True
+
+    only_count = options.get("only_count", False)
+    barcode_filter = options.get("barcode_filter", "")
+    include_fault = options.get("include_fault", True)
+    include_no_fault = options.get("include_no_fault", True)
+
+    sort_asc = options.get("sort_asc", True)
+    page_index = options.get("page_index", 0)
+    page_size = options.get("page_size", 0)
+
     pattern = f"*{barcode_filter}*" if barcode_filter else None
     no_pattern = pattern is None
 
-    current_page = 0
-    current_page_count = 0
-    for key in _keys_asc if ascending else _keys_desc:
-        if current_page > page_number:
-            return
-        if no_pattern or string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True):
-            if current_page == page_number:
-                yield get_handbrake_info(key, options)
-            current_page_count += 1
-            if current_page_count >= page_size:
-                current_page += 1
-                current_page_count = 0
+    if only_count:
+        count = 0
+        for key in _keys_asc if sort_asc else _keys_desc:
+            if is_ok():
+                count += 1
+        return count
+    else:
+        res = []
+        current_page = 0
+        current_page_count = 0
+        for key in _keys_asc if sort_asc else _keys_desc:
+            if current_page > page_index:
+                break
+            if is_ok():
+                if current_page == page_index:
+                    res.append(get_handbrake_info(key, options))
+                current_page_count += 1
+                if current_page_count >= page_size:
+                    current_page += 1
+                    current_page_count = 0
+        return res
 
-
-def get_count(barcode_filter):
-    pattern = f"*{barcode_filter}*" if barcode_filter else None
-    if pattern is None:
-        return len(_key_to_barcode)
-    count = 0
-    for key in _keys_asc:
-        if string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True):
-            count += 1
-    return count
+# def search(barcode_filter, ascending, page_number, page_size, options):
+#     pattern = f"*{barcode_filter}*" if barcode_filter else None
+#     no_pattern = pattern is None
+#
+#     current_page = 0
+#     current_page_count = 0
+#     for key in _keys_asc if ascending else _keys_desc:
+#         if current_page > page_number:
+#             return
+#         if no_pattern or string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True):
+#             if current_page == page_number:
+#                 yield get_handbrake_info(key, options)
+#             current_page_count += 1
+#             if current_page_count >= page_size:
+#                 current_page += 1
+#                 current_page_count = 0
+#
+#
+# def get_count(barcode_filter, options):
+#     pattern = f"*{barcode_filter}*" if barcode_filter else None
+#     if pattern is None:
+#         return len(_key_to_barcode)
+#     count = 0
+#     for key in _keys_asc:
+#         if string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True):
+#             count += 1
+#     return count

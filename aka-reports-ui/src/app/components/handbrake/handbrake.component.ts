@@ -4,9 +4,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { merge, fromEvent, Observable, of } from 'rxjs';
 import { filter, map, debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { AkaReporterService } from 'src/app/services/aka-reporter.service';
-import { HandbrakeItem } from 'src/app/models/handbrake-item.model';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { HandbrakeHelper, HandbrakeItem, HandbrakeSearchOptions } from 'src/app/models/handbrake-item.model';
 import { ThisReceiver } from '@angular/compiler';
 
 import { AngularSplitModule } from 'angular-split';
@@ -25,48 +24,51 @@ import { MatSort } from '@angular/material/sort';
 export class HandbrakeComponent implements OnInit, AfterViewInit {
   // ref: https://blog.angular-university.io/angular-material-data-table/
   // ref: https://github.com/angular-university/angular-material-course/tree/2-data-table-finished
-  // displayedColumns = ["type", "hasFault", "date", "barcode"];
+
+  dataSource!: HandbrakeDataSource;
+
   displayedColumns = ["hasFault", "date", "barcode"];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;
 
-  length = 0;
+  // length = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [10, 50, 1000];
 
+  optionsForm: FormGroup;
 
-  // constructor(private observer: BreakpointObserver, private router: Router, private akaReporterService: AkaReporterService) {
-  constructor(private handbrakeService: HandbrakeService, private cdr: ChangeDetectorRef) {
-    // this.dataSource = new MatTableDataSource(this.handbrakeItems);
+  public get searchExists(): boolean {
+    const opts: HandbrakeSearchOptions = this.optionsForm.value;
+    if (opts.barcode_filter)
+      return true;
+    else
+      return false;
+  }
+  constructor(fb: FormBuilder, private handbrakeService: HandbrakeService, private cdr: ChangeDetectorRef) {
+    this.optionsForm = fb.group(HandbrakeHelper.createDefaultOptions());
   }
 
   ngOnInit(): void {
     this.dataSource = new HandbrakeDataSource(this.handbrakeService);
-    // this.dataSource.loadHandbrakes('', 'asc', 0, 3);
-
-
-    this.barcodeSearchControl.valueChanges.subscribe(value => this._updateAutoCompleteList(value));
-    // this.filteredSearchResults = this.barcodeSearchControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map(value => this._search(value)),
-    // );
+    // this.barcodeSearchControl.valueChanges.subscribe(value => this._updateAutoCompleteList(value));
+    this.optionsForm.valueChanges.subscribe(value => this.loadHandbrakesPage());
   }
 
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    fromEvent(this.input.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.loadHandbrakesPage();
-        })
-      )
-      .subscribe();
+    // fromEvent(this.input.nativeElement, 'keyup')
+    //   .pipe(
+    //     debounceTime(150),
+    //     distinctUntilChanged(),
+    //     tap(() => {
+    //       this.paginator.pageIndex = 0;
+    //       this.loadHandbrakesPage();
+    //     })
+    //   )
+    //   .subscribe();
 
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
@@ -79,62 +81,68 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   }
 
   loadHandbrakesPage() {
-    this.dataSource.loadHandbrakes(this.barcodeSearchControl.value, this.sort.direction, this.paginator.pageIndex, this.paginator.pageSize);
+    const opts:HandbrakeSearchOptions = this.optionsForm.value
+    opts.sort_asc = this.sort.direction == "asc";
+    opts.page_index = this.paginator.pageIndex;
+    opts.page_size = this.paginator.pageSize;
+    this.dataSource.loadHandbrakes(opts);
+  }
+
+  barcodeFilterControl = new FormControl();
+  public clearBarcodeFilter() {
+    this.barcodeFilterControl.setValue("")
+    this.paginator.pageIndex = 0
+    // this.loadHandbrakesPage()
   }
 
 
 
 
+  // barcodeSearchControl = new FormControl();
+  // autoCompleteList: Observable<string[]> = of([]);
+  // handbrakeItems: Observable<HandbrakeItem[]> = of([]);
 
 
-  search_barcode = '';
 
-  barcodeSearchControl = new FormControl();
-  autoCompleteList: Observable<string[]> = of([]);
-  handbrakeItems: Observable<HandbrakeItem[]> = of([]);
+  // @ViewChild(MatSidenav)
+  // sidenav!: MatSidenav;
 
-  dataSource!: HandbrakeDataSource;
+  // public get searchExists(): boolean {
+  //   return this.barcodeSearchControl.value != null && this.barcodeSearchControl.value != ''
+  // }
 
-  @ViewChild(MatSidenav)
-  sidenav!: MatSidenav;
+  // private _updateAutoCompleteList(value: string): void {
+  //   this.loadHandbrakesPage()
+  //   // this.akaReporterService.searchBarcodes(value).subscribe({
+  //   //   next: (response) => {
+  //   //     this.autoCompleteList = of(response);
+  //   //   },
+  //   //   error: (err) => {
+  //   //     console.log('HandbrakeComponent._updateAutoCompleteList error: ' + err.message);
+  //   //   }
+  //   // });
+  // }
+  // public search(value: string): void {
+  //   this.loadHandbrakesPage()
+  //   // this.akaReporterService.searchHandbrakes(value).subscribe({
+  //   //   next: (response) => {
+  //   //     this.handbrakeItems = of(this.sort(response));
+  //   //   },
+  //   //   error: (err) => {
+  //   //     console.log('HandbrakeComponent._search error: ' + err.message);
+  //   //   }
+  //   // });
+  //   // return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  // }
 
-  public get searchExists(): boolean {
-    return this.barcodeSearchControl.value != null && this.barcodeSearchControl.value != ''
-  }
+  // public applySearch() {
+  //   this.search(this.barcodeSearchControl.value)
+  // }
 
-
-  private _updateAutoCompleteList(value: string): void {
-    this.loadHandbrakesPage()
-    // this.akaReporterService.searchBarcodes(value).subscribe({
-    //   next: (response) => {
-    //     this.autoCompleteList = of(response);
-    //   },
-    //   error: (err) => {
-    //     console.log('HandbrakeComponent._updateAutoCompleteList error: ' + err.message);
-    //   }
-    // });
-  }
-  public search(value: string): void {
-    this.loadHandbrakesPage()
-    // this.akaReporterService.searchHandbrakes(value).subscribe({
-    //   next: (response) => {
-    //     this.handbrakeItems = of(this.sort(response));
-    //   },
-    //   error: (err) => {
-    //     console.log('HandbrakeComponent._search error: ' + err.message);
-    //   }
-    // });
-    // return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  public applySearch() {
-    this.search(this.barcodeSearchControl.value)
-  }
-
-  public clearSearch() {
-    this.barcodeSearchControl.setValue("")
-    this.applySearch()
-  }
+  // public clearSearch() {
+  //   this.barcodeSearchControl.setValue("")
+  //   this.applySearch()
+  // }
 
 
   // ngAfterViewInit() {

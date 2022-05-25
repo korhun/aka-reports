@@ -7,10 +7,11 @@
 
           <div class="search-left">
 
-            <form class="handbrake-form">
-              <mat-form-field class="full-width" appearance="outline">
-                <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput #input
-                  [formControl]="barcodeSearchControl" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
+            <form class="options-form" [formGroup]="optionsForm">
+
+              <!-- <mat-form-field class="full-width" appearance="outline">
+                <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
+                  [formControl]="options" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
                 <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete">
                   <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
                     (onSelectionChange)="search(option)">
@@ -25,8 +26,36 @@
                   type="button">
                   <mat-icon>search</mat-icon>
                 </button>
-              </mat-form-field>
+              </mat-form-field> -->
+
+              <section class="fault-check-form">
+                <mat-form-field class="full-width" appearance="outline">
+                  <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
+                    [formControl]="barcodeFilterControl" formControlName="barcode_filter">
+                  <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search"
+                    (click)="clearBarcodeFilter()" type="button">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <button matSuffix mat-icon-button color="basic" aria-label="apply search" type="button">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                </mat-form-field>
+
+
+                <p>
+                  <mat-checkbox formControlName="include_fault">Hatalı</mat-checkbox>
+                </p>
+                <p>
+                  <mat-checkbox formControlName="include_no_fault">Hatasız</mat-checkbox>
+                </p>
+              </section>
+
             </form>
+
+
+            <!-- <section class="example-section" [formGroup]="optionsForm">
+              {{optionsForm.value | json}}
+            </section> -->
 
           </div>
 
@@ -74,11 +103,8 @@
               <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
             </mat-table>
 
-            <!-- <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[25, 100, 1000]"></mat-paginator> -->
-            <mat-paginator [length]="dataSource.length$ | async"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               aria-label="Select page">
+            <mat-paginator class="mat-elevation-z8" [length]="dataSource.length$ | async" [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions" aria-label="Select page">
             </mat-paginator>
 
 

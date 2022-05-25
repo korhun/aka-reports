@@ -26,6 +26,46 @@ logger = logging.getLogger(__name__)
 
 class HandbrakeHandler(BaseHandler, ABC):
 
+    def get(self):
+        """
+        options: {
+            only_count: boolean,
+            barcode_filter: string,
+            include_fault: boolean,
+            include_no_fault: boolean,
+
+            sort_asc: boolean,
+            page_index: number,
+            page_size: number
+        }
+        """
+        args = self.request.arguments if self.request and self.request.arguments else None
+        if args is None:
+            self.set_status(400)
+            return
+
+        options = self.get_argument('options', None)
+        options = {} if options is None else json.loads(options)
+        res = handbrake_manager.search(options)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(res))
+
+        # barcode_filter = options.get("barcode_filter", "")
+        # if options.get("only_count", False):
+        #     # res = handbrake_manager.get_count(barcode_filter, options)
+        #     res = list(handbrake_manager.search(options, barcode_filter, false, page_number, page_size))
+        #     self.set_header('Content-Type', 'application/json')
+        #     self.write(json.dumps(res))
+        # else:
+        #     ascending = self.get_argument('sortOrder', "").lower() == "asc"
+        #     page_number = int(self.get_argument('pageNumber', "0"))
+        #     page_size = int(self.get_argument('pageSize', "5"))
+        #
+        #     res = list(handbrake_manager.search(options, barcode_filter, ascending, page_number, page_size))
+        #
+        #     self.set_header('Content-Type', 'application/json')
+        #     self.write(json.dumps(res))
+
     # def __init__(
     #         self,
     #         application: "Application",
@@ -44,29 +84,36 @@ class HandbrakeHandler(BaseHandler, ABC):
     500 Internal Server Error – a generic error occurred on the server
     503 Service Unavailable – the requested service is not available
     """
-
-    def get(self):
-        args = self.request.arguments if self.request and self.request.arguments else None
-        if args is None:
-            self.set_status(400)
-            return
-
-        barcode_filter = self.get_argument('barcodeFilter', "")
-
-        options = self.get_argument('options', None)
-        if options and options == "only_count":
-            res = handbrake_manager.get_count(barcode_filter)
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(res))
-        else:
-            ascending = self.get_argument('sortOrder', "").lower() == "asc"
-            page_number = int(self.get_argument('pageNumber', "0"))
-            page_size = int(self.get_argument('pageSize', "5"))
-
-            res = list(handbrake_manager.search(barcode_filter, ascending, page_number, page_size, options))
-
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(res))
+    #
+    # def get(self):
+    #     """
+    #     options: {
+    #         "include_fault": True
+    #         "include_no_fault: True
+    #     }
+    #     :return:
+    #     """
+    #     args = self.request.arguments if self.request and self.request.arguments else None
+    #     if args is None:
+    #         self.set_status(400)
+    #         return
+    #
+    #     barcode_filter = self.get_argument('barcodeFilter', "")
+    #
+    #     options = self.get_argument('options', None)
+    #     if options == "only_count":
+    #         res = handbrake_manager.get_count(barcode_filter, options)
+    #         self.set_header('Content-Type', 'application/json')
+    #         self.write(json.dumps(res))
+    #     else:
+    #         ascending = self.get_argument('sortOrder', "").lower() == "asc"
+    #         page_number = int(self.get_argument('pageNumber', "0"))
+    #         page_size = int(self.get_argument('pageSize', "5"))
+    #
+    #         res = list(handbrake_manager.search(barcode_filter, ascending, page_number, page_size, options))
+    #
+    #         self.set_header('Content-Type', 'application/json')
+    #         self.write(json.dumps(res))
 
 #     prj = self.db.find_project(prj_id)
 #     if prj is None:

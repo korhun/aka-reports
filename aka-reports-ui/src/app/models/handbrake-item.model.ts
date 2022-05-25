@@ -7,7 +7,43 @@ export interface HandbrakeItem {
   imgSrc: string;
 }
 
-export class HandbrakeItemHelper {
+export interface HandbrakeSearchOptions {
+  only_count: boolean,
+  barcode_filter: string,
+  include_fault: boolean,
+  include_no_fault: boolean,
+
+  sort_asc: boolean,
+  page_index: number,
+  page_size: number
+}
+
+export class HandbrakeHelper {
+  public static createDefaultOptions(): HandbrakeSearchOptions {
+    return {
+      only_count: false,
+      barcode_filter: "",
+      include_fault: true,
+      include_no_fault: true,
+
+      sort_asc: true,
+      page_index: 0,
+      page_size: 0,
+    }
+  }
+  public static createOptionsForCount(options: HandbrakeSearchOptions): HandbrakeSearchOptions {
+    return {
+      only_count: true,
+      barcode_filter: options.barcode_filter,
+      include_fault: options.include_fault,
+      include_no_fault: options.include_no_fault,
+
+      sort_asc: true,
+      page_index: 0,
+      page_size: 0,
+    }
+  }
+
   public static validate(obj: HandbrakeItem): void {
     // if (obj.barcode == null)
     //     obj.barcode = ""
