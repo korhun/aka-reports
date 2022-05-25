@@ -1,3 +1,10 @@
+
+mat-divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .search-container {
   display: flex;
   flex-direction: row;
@@ -32,6 +39,8 @@
 
   color: var(--color);
   background-color: var(--background-color);
+
+  overflow: auto;
 }
 .search-right {
   padding: 1em;
@@ -43,6 +52,19 @@
 }
 
 
+.spinner-container {
+  height: 360px;
+  width: 390px;
+  position: fixed;
+}
+
+.spinner-container mat-spinner {
+  margin: 130px auto 0 auto;
+}
+
+.type-image{
+  height: 36px;
+}
 
 // .example-header {
 //   position: fixed;
@@ -131,9 +153,3 @@
 //   font-size: 0.7rem;
 //   color: lightgrey;
 // }
-
-mat-divider {
-  margin-top: 16px;
-  margin-bottom: 16px;
-  background-color: rgba(255, 255, 255, 0.5);
-}

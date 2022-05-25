@@ -51,14 +51,22 @@ class HandbrakeHandler(BaseHandler, ABC):
             self.set_status(400)
             return
 
-        search_text = self.get_argument('search_text', None)
-        limit = self.get_argument('limit', None)
+        barcode_filter = self.get_argument('barcodeFilter', "")
+
         options = self.get_argument('options', None)
+        if options and options == "only_count":
+            res = handbrake_manager.get_count(barcode_filter)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(res))
+        else:
+            ascending = self.get_argument('sortOrder', "").lower() == "asc"
+            page_number = int(self.get_argument('pageNumber', "0"))
+            page_size = int(self.get_argument('pageSize', "5"))
 
-        res = list(handbrake_manager.search(search_text, limit, options))
+            res = list(handbrake_manager.search(barcode_filter, ascending, page_number, page_size, options))
 
-        self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(res))
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(res))
 
 #     prj = self.db.find_project(prj_id)
 #     if prj is None:

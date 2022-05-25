@@ -1,18 +1,15 @@
 <ng-container>
-  <!-- <mat-toolbar class="example-header">Header</mat-toolbar> -->
-
-
   <div class="search-container">
     <as-split direction="horizontal">
 
       <as-split-area [size]="20">
-        <div class="search-container-left">
+        <div class="search-container-left mat-elevation-z8">
 
           <div class="search-left">
 
             <form class="handbrake-form">
               <mat-form-field class="full-width" appearance="outline">
-                <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
+                <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput #input
                   [formControl]="barcodeSearchControl" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
                 <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete">
                   <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
@@ -37,10 +34,56 @@
       </as-split-area>
 
       <as-split-area [size]="80">
-        <div class="search-container-right">
+        <div class="search-container-right mat-elevation-z8">
 
           <div class="search-right">
-            <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
+            <!-- <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item> -->
+
+
+            <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+              <mat-spinner></mat-spinner>
+            </div>
+
+            <mat-table class="handbrakes-table mat-elevation-z8" [dataSource]="dataSource" matSort matSortActive="date"
+              matSortDirection="asc" matSortDisableClear>
+
+              <!-- <ng-container matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+                <mat-cell *matCellDef="let handbrake"><img [src]="handbrake.imgSrc" class="type-image" /></mat-cell>
+              </ng-container> -->
+
+              <ng-container matColumnDef="hasFault">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <!-- <mat-cell class="duration-cell" *matCellDef="let handbrake">{{handbrake.has_fault}}</mat-cell> -->
+                <mat-cell *matCellDef="let handbrake"><img [src]="handbrake.imgSrc" class="type-image" /></mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Tarih</mat-header-cell>
+                <!-- <mat-cell *matCellDef="let handbrake">{{handbrake.time | date:'short'}}</mat-cell> -->
+                <mat-cell *matCellDef="let handbrake">{{handbrake.time | date:'medium'}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="barcode">
+                <mat-header-cell *matHeaderCellDef>Barkod</mat-header-cell>
+                <mat-cell class="description-cell" *matCellDef="let handbrake">{{handbrake.barcode}}</mat-cell>
+              </ng-container>
+
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+
+            <!-- <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[25, 100, 1000]"></mat-paginator> -->
+            <mat-paginator [length]="dataSource.length$ | async"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               aria-label="Select page">
+            </mat-paginator>
+
+
+
+
 
           </div>
         </div>
@@ -48,77 +91,4 @@
 
     </as-split>
   </div>
-
-
-  <!-- <mat-sidenav-container class="search-container">
-
-    <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="search-container-left" [fixedInViewport]=false>
-      <form class="handbrake-form">
-        <mat-form-field class="full-width" appearance="outline">
-          <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Elcik Barkodu Ara" matInput
-            [formControl]="barcodeSearchControl" [matAutocomplete]="auto">
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
-              (onSelectionChange)="search(option)">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-          <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()">
-            <mat-icon>close</mat-icon>
-          </button>
-          <button matSuffix mat-icon-button color="basic" aria-label="apply search" (click)="applySearch()">
-            <mat-icon>search</mat-icon>
-          </button>
-        </mat-form-field>
-      </form>
-
-
-    </mat-sidenav>
-
-    <mat-sidenav-content class="search-container-right">
-
-
-      <app-handbrake-item *ngFor="let item of handbrakeItems | async" [handbrakeItem]="item"></app-handbrake-item>
-
-
-    </mat-sidenav-content>
-
-  </mat-sidenav-container> -->
-
-  <!-- <mat-toolbar class="example-footer">Footer</mat-toolbar> -->
-
-
 </ng-container>
-
-
-<!--
-    <mat-form-field class="search-box" appearance="fill">
-    <mat-label>Elcik Bul</mat-label>
-    <input matInput type="text" [(ngModel)]="search_value">
-    <button *ngIf="search_value" matSuffix mat-icon-button aria-label="Clear" (click)="search_value=''">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
-
-
- <mat-sidenav-container class="search-container">
-    <mat-sidenav #sidenav mode="side" opened class="search-container-left" [fixedInViewport]=false>
-
-        <mat-form-field class="search-box" appearance="outline">
-          <mat-label>Barkodu</mat-label>
-          <input matInput type="text" [(ngModel)]="search_barcode">
-          <button *ngIf="search_barcode" matSuffix mat-icon-button aria-label="Clear" (click)="search_barcode=''">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-
-
-
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-
--->

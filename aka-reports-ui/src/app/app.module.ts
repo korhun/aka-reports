@@ -14,6 +14,14 @@ import { environment } from '../environments/environment';
 import { HandbrakeComponent } from './components/handbrake/handbrake.component';
 import { HandbrakeItemComponent } from './components/handbrake-item/handbrake-item.component';
 import { AngularSplitModule } from 'angular-split';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getTurkishPaginatorIntl } from './utils/turkish-paginator-intl';
+
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeTr from '@angular/common/locales/tr';
+
+registerLocaleData(localeTr);
 
 @NgModule({
   declarations: [
@@ -39,7 +47,11 @@ import { AngularSplitModule } from 'angular-split';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [],
+  providers: [
+    // { provide: LOCALE_ID, useValue: "en-US" },
+    { provide: LOCALE_ID, useValue: "tr-TR" },
+    { provide: MatPaginatorIntl, useValue: getTurkishPaginatorIntl() }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
