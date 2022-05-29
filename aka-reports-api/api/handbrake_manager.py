@@ -170,6 +170,8 @@ def search(options):
     pattern = f"*{barcode_filter}*" if barcode_filter else None
     no_pattern = pattern is None
 
+    logging.info(f"barcode_filter: {barcode_filter}")
+
     if only_count:
         count = 0
         for key in _keys_asc if sort_asc else _keys_desc:

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable, of } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, of, debounceTime } from "rxjs";
+import { map, switchMap } from "rxjs/operators";
 import { HandbrakeItem, HandbrakeHelper, HandbrakeSearchOptions } from "../models/handbrake-item.model";
 
 @Injectable({
@@ -35,22 +35,62 @@ export class HandbrakeService {
   //     );
   // }
 
+  private subscriptionHandbrake!: any;
 
-  findHandbrakes(options: HandbrakeSearchOptions): Observable<HandbrakeItem[]> {
+
+  private _findHandbrakes(options: HandbrakeSearchOptions): Observable<any> {
     return this.http.get('/api/handbrake', {
       params: new HttpParams()
         .set('options', JSON.stringify(options))
-    }).pipe(
+    });
+  }
+
+  findHandbrakes(options: HandbrakeSearchOptions): Observable<HandbrakeItem[]> {
+    // const res = this._findHandbrakes(options).pipe(
+    //   map(items => HandbrakeHelper.getHandbrakeItems(items))
+    // );
+    // res.pipe(
+    //   debounceTime(5000)
+    // )
+    // return res;
+
+    // // if (this.subscriptionHandbrake)
+    //   // this.subscriptionHandbrake.unsubscribe();
+    // const res = this._findHandbrakes(options).pipe(
+    //   map(items => HandbrakeHelper.getHandbrakeItems(items))
+    // );
+    // this.subscriptionHandbrake = res.subscribe();
+    // this.subscriptionHandbrake.unsubscribe();
+    // return res
+
+    return this._findHandbrakes(options).pipe(
+      // map(items => HandbrakeHelper.getHandbrakeItems(items))
       map(items => HandbrakeHelper.getHandbrakeItems(items))
-    );
+    )
+
+    // return this.http.get('/api/handbrake', {
+    //   params: new HttpParams()
+    //     .set('options', JSON.stringify(options))
+    // }).pipe(
+    //   map(items => HandbrakeHelper.getHandbrakeItems(items))
+    // );
   }
   findHandbrakesCount(options: HandbrakeSearchOptions): Observable<number> {
-    return this.http.get('/api/handbrake', {
-      params: new HttpParams()
-        .set('options', JSON.stringify(HandbrakeHelper.createOptionsForCount(options)))
-    }).pipe(
-      map(count => +count)
-    );
+    return of(1)
+    // if (this.subscriptionHandbrake)
+    //   this.subscriptionHandbrake.unsubscribe();
+    // const res = this._findHandbrakes(HandbrakeHelper.createOptionsForCount(options)).pipe(
+    //   map(count => +count)
+    // );
+    // this.subscriptionHandbrake = res.subscribe();
+    // return res
+
+    // return this.http.get('/api/handbrake', {
+    //   params: new HttpParams()
+    //     .set('options', JSON.stringify(HandbrakeHelper.createOptionsForCount(options)))
+    // }).pipe(
+    //   map(count => +count)
+    // );
   }
 
   // findHandbrakes(

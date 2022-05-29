@@ -16,6 +16,7 @@ def main():
         # import logging.config
         # logging.config.fileConfig('logging.conf')
         if app_helper.is_debugging():
+            logging.getLogger('tornado.access').disabled = True
             logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
         # with open('config.yaml') as f:

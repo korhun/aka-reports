@@ -2,8 +2,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewCh
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { merge, fromEvent, Observable, of } from 'rxjs';
-import { filter, map, debounceTime, distinctUntilChanged, startWith, tap, delay } from 'rxjs/operators';
+import { merge, fromEvent, Observable, of, BehaviorSubject } from 'rxjs';
+import { filter, map, debounceTime, distinctUntilChanged, startWith, tap, delay, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HandbrakeHelper, HandbrakeItem, HandbrakeSearchOptions } from 'src/app/models/handbrake-item.model';
 import { ThisReceiver } from '@angular/compiler';
@@ -51,8 +51,14 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.dataSource = new HandbrakeDataSource(this.handbrakeService);
-    // this.barcodeSearchControl.valueChanges.subscribe(value => this._updateAutoCompleteList(value));
-    this.optionsForm.valueChanges.subscribe(value => this.loadHandbrakesPage());
+    // this.optionsForm.valueChanges.subscribe(value => this.loadHandbrakesPage());
+    this.optionsForm.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      // switchMap(val=>val),
+      tap(() => this.loadHandbrakesPage())
+    )
+    .subscribe();
   }
 
 
@@ -72,6 +78,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
+        debounceTime(150),
         tap(() => this.loadHandbrakesPage())
       )
       .subscribe();
@@ -81,6 +88,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   }
 
   loadHandbrakesPage() {
+    this.cdr.detectChanges();
     const opts:HandbrakeSearchOptions = this.optionsForm.value
     opts.sort_asc = this.sort.direction == "asc";
     opts.page_index = this.paginator.pageIndex;
@@ -93,6 +101,10 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     this.barcodeFilterControl.setValue("")
     this.paginator.pageIndex = 0
     // this.loadHandbrakesPage()
+
+    const opts:HandbrakeSearchOptions = this.optionsForm.value
+    opts.barcode_filter = ""
+    this.optionsForm.setValue(opts)
   }
 
 

@@ -31,14 +31,15 @@
               <section class="fault-check-form">
                 <mat-form-field class="full-width" appearance="outline">
                   <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
-                    [formControl]="barcodeFilterControl" formControlName="barcode_filter">
+                    [formControl]="barcodeFilterControl" formControlName="barcode_filter"
+                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                   <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search"
                     (click)="clearBarcodeFilter()" type="button">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <button matSuffix mat-icon-button color="basic" aria-label="apply search" type="button">
+                  <!-- <button matSuffix mat-icon-button color="basic" aria-label="apply search" type="button">
                     <mat-icon>search</mat-icon>
-                  </button>
+                  </button> -->
                 </mat-form-field>
 
 
