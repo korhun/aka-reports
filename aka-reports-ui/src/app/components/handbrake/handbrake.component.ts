@@ -58,7 +58,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       // switchMap(val=>val),
       tap(() => this.loadHandbrakesPage())
     )
-    .subscribe();
+      .subscribe();
   }
 
 
@@ -89,7 +89,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
   loadHandbrakesPage() {
     this.cdr.detectChanges();
-    const opts:HandbrakeSearchOptions = this.optionsForm.value
+    const opts: HandbrakeSearchOptions = this.optionsForm.value
     opts.sort_asc = this.sort.direction == "asc";
     opts.page_index = this.paginator.pageIndex;
     opts.page_size = this.paginator.pageSize;
@@ -102,12 +102,23 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     this.paginator.pageIndex = 0
     // this.loadHandbrakesPage()
 
-    const opts:HandbrakeSearchOptions = this.optionsForm.value
+    const opts: HandbrakeSearchOptions = this.optionsForm.value
     opts.barcode_filter = ""
     this.optionsForm.setValue(opts)
   }
 
-
+  checkChanged_includeFault() {
+    const opts: HandbrakeSearchOptions = this.optionsForm.value
+    if (!opts.include_fault && !opts.include_no_fault) {
+      this.optionsForm.patchValue({include_no_fault: true});
+    }
+  }
+  checkChanged_includeNoFault() {
+    const opts: HandbrakeSearchOptions = this.optionsForm.value
+    if (!opts.include_fault && !opts.include_no_fault) {
+      this.optionsForm.patchValue({include_fault: true});
+    }
+  }
 
 
   // barcodeSearchControl = new FormControl();

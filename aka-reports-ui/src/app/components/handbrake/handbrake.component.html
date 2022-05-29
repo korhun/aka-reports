@@ -1,33 +1,10 @@
 <ng-container>
   <div class="search-container">
     <as-split direction="horizontal">
-
       <as-split-area [size]="20">
         <div class="search-container-left mat-elevation-z8">
-
           <div class="search-left">
-
             <form class="options-form" [formGroup]="optionsForm">
-
-              <!-- <mat-form-field class="full-width" appearance="outline">
-                <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
-                  [formControl]="options" [matAutocomplete]="auto" (keydown.enter)="applySearch()">
-                <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete">
-                  <mat-option *ngFor="let option of autoCompleteList | async" [value]="option"
-                    (onSelectionChange)="search(option)">
-                    {{option}}
-                  </mat-option>
-                </mat-autocomplete>
-                <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search" (click)="clearSearch()"
-                  type="button">
-                  <mat-icon>close</mat-icon>
-                </button>
-                <button matSuffix mat-icon-button color="basic" aria-label="apply search" (click)="applySearch()"
-                  type="button">
-                  <mat-icon>search</mat-icon>
-                </button>
-              </mat-form-field> -->
-
               <section class="fault-check-form">
                 <mat-form-field class="full-width" appearance="outline">
                   <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
@@ -41,25 +18,15 @@
                     <mat-icon>search</mat-icon>
                   </button> -->
                 </mat-form-field>
-
-
                 <p>
-                  <mat-checkbox formControlName="include_fault">Hatalı</mat-checkbox>
+                  <mat-checkbox formControlName="include_fault" (change)="checkChanged_includeFault()">Hatalı</mat-checkbox>
                 </p>
                 <p>
-                  <mat-checkbox formControlName="include_no_fault">Hatasız</mat-checkbox>
+                  <mat-checkbox formControlName="include_no_fault" (change)="checkChanged_includeNoFault()">Hatasız</mat-checkbox>
                 </p>
               </section>
-
             </form>
-
-
-            <!-- <section class="example-section" [formGroup]="optionsForm">
-              {{optionsForm.value | json}}
-            </section> -->
-
           </div>
-
         </div>
       </as-split-area>
 
