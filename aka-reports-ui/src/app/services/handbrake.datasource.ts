@@ -29,8 +29,6 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
       finalize(() => this.loadingSubject.next(false))
     ).subscribe(handbrakes => this.handbrakesSubject.next(handbrakes));
 
-
-
     this.handbrakeService.findHandbrakesCount(options).pipe(
       catchError(() => of([])),
     ).subscribe(count => this.lengthSubject.next(+count));
