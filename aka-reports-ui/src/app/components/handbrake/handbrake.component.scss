@@ -83,12 +83,22 @@ mat-divider {
 .table-type-image {
   height: 2em;
 }
-.centered{
+.centered {
   display: table;
   margin: 0 auto;
 }
-.width100{
+.width100 {
   width: 100%;
+}
+
+.mat-column-hasFault {
+  flex: 0 0 65px;
+}
+.mat-column-scan_date {
+  flex: 0 0 165px;
+}
+.mat-column-barcode_date {
+  flex: 0 0 165px;
 }
 
 // .example-header {

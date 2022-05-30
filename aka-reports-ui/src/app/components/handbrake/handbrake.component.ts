@@ -26,7 +26,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
   dataSource!: HandbrakeDataSource;
 
-  displayedColumns = ["hasFault", "date", "barcode"];
+  displayedColumns = ["hasFault", "scan_date", "barcode_date", "barcode"];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;

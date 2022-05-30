@@ -43,7 +43,7 @@
 
 
                 <mat-form-field class="full-width" appearance="outline">
-                  <mat-label>Kontrol Tarihi</mat-label>
+                  <mat-label>Tarama Tarihi</mat-label>
                   <mat-date-range-input [rangePicker]="picker">
                     <input matStartDate placeholder="Başlangıç" formControlName="date_start">
                     <input matEndDate placeholder="Bitiş" formControlName="date_end">
@@ -118,17 +118,21 @@
                 </mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="date">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Tarih</mat-header-cell>
+              <ng-container matColumnDef="scan_date">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Tarama Tarihi</mat-header-cell>
                 <!-- <mat-cell *matCellDef="let handbrake">{{handbrake.time | date:'short'}}</mat-cell> -->
-                <mat-cell *matCellDef="let handbrake">{{handbrake.time | date:'medium'}}</mat-cell>
+                <mat-cell *matCellDef="let handbrake">{{handbrake.scan_date | date:'medium'}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="barcode_date">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Barkod Tarihi</mat-header-cell>
+                <mat-cell *matCellDef="let handbrake">{{handbrake.barcode_date | date:'medium'}}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="barcode">
                 <mat-header-cell *matHeaderCellDef>Barkod</mat-header-cell>
                 <mat-cell class="description-cell" *matCellDef="let handbrake">{{handbrake.barcode}}</mat-cell>
               </ng-container>
-
 
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>

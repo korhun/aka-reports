@@ -3,8 +3,9 @@ export interface HandbrakeItem {
   key: number;
   barcode: string;
   has_fault: boolean;
+  scan_date: Date;
+  barcode_date: Date;
   type: string;
-  time: Date;
   imgSrc: string;
 }
 

@@ -4,12 +4,15 @@ import logging
 import sys
 import threading
 import time
+import dateutil.parser
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 from utils import file_helper, string_helper
 from utils.label_file import LabelFile
+
+from dateutil.tz import UTC
 
 _key_to_handbrake = {}
 _key_to_barcode = {}
@@ -48,6 +51,10 @@ def _create_key(barcode, dir_path):
     return hash(f"{barcode}:{dir_path}".encode("utf-8"))
 
 
+def _get_datetime_from_barcode(barcode) -> object:
+    return None
+
+
 def _create_handbrake(barcode, dir_path):
     """
     :return: None or
@@ -55,7 +62,8 @@ def _create_handbrake(barcode, dir_path):
         "key": int,
         "barcode": string,
         "has_fault": boolean,
-        "time": iso format datetime
+        "scan_date": iso format datetime
+        "barcode_date": iso format datetime
         "type": string
         "cam0":
             {
@@ -69,7 +77,7 @@ def _create_handbrake(barcode, dir_path):
     """
     img_exists = False
     has_fault = False
-    res = {
+    handbrake = {
         "key": _create_key(barcode, dir_path),
         "barcode": barcode
     }
@@ -79,7 +87,7 @@ def _create_handbrake(barcode, dir_path):
             "image_fn": None,
             "label_fn": None
         }
-        res[f"cam{i}"] = cam_data
+        handbrake[f"cam{i}"] = cam_data
         try:
             img_fn = file_helper.path_join(dir_path, f"{barcode}{suffix}.png")
             if not os.path.isfile(img_fn):
@@ -101,10 +109,11 @@ def _create_handbrake(barcode, dir_path):
 
     if not img_exists:
         return None
-    res["time"] = datetime.datetime.fromtimestamp(min(times)).isoformat()
-    res["type"] = barcode_type(barcode)
-    res["has_fault"] = has_fault
-    return res
+    handbrake["scan_date"] = datetime.datetime.fromtimestamp(min(times)).isoformat()
+    handbrake["barcode_date"] = _get_datetime_from_barcode(barcode)
+    handbrake["type"] = barcode_type(barcode)
+    handbrake["has_fault"] = has_fault
+    return handbrake
 
 
 def barcode_type(barcode):
@@ -128,7 +137,7 @@ def _watch_workspace():
 class Handler(FileSystemEventHandler):
 
     @staticmethod
-    def on_any_event(event):
+    def on_any_event(event):  # noqa
         _workspace_changed()
         # print(event)
         # if event.is_directory:
@@ -174,7 +183,7 @@ def _update_workspace_cache_if_required():
                     else:
                         _barcode_to_keys[barcode] = [key]
 
-        _keys_asc.sort(key=lambda x: _key_to_handbrake[x]["time"])
+        _keys_asc.sort(key=lambda x: _key_to_handbrake[x]["scan_date"])
         _keys_desc.extend(_keys_asc)
         _keys_desc.reverse()
     finally:
@@ -201,7 +210,8 @@ def get_handbrake_info(key, options):
     res = {
         "key": handbrake["key"],
         "barcode": handbrake["barcode"],
-        "time": handbrake["time"],
+        "scan_date": handbrake["scan_date"],
+        "barcode_date": handbrake["barcode_date"],
         "has_fault": handbrake["has_fault"],
         "type": handbrake["type"],
     }
@@ -216,6 +226,8 @@ def search(options):
         if not (no_pattern or string_helper.wildcard(barcode, pattern, case_insensitive=True)):
             return False
 
+        handbrake = None
+
         if not include_fault or not include_no_fault:
             handbrake = _key_to_handbrake[key]
             if not include_fault and handbrake["has_fault"]:
@@ -229,6 +241,19 @@ def search(options):
                 return False
             if not type_blk and btype == "blk":
                 return False
+
+        if date_start or date_end or not date_shift1 or not date_shift2 or not date_shift3:
+            if handbrake is None:
+                handbrake = _key_to_handbrake[key]
+            scan_date = dateutil.parser.isoparse(handbrake["scan_date"]).astimezone(UTC)
+            if date_start:
+                start = dateutil.parser.isoparse(date_start).astimezone(UTC)
+                if scan_date < start:
+                    return False
+            if date_end:
+                end = dateutil.parser.isoparse(date_end).astimezone(UTC) + datetime.timedelta(days=1)
+                if scan_date > end:
+                    return False
 
         return True
 
