@@ -16,6 +16,15 @@ export interface HandbrakeSearchOptions {
   type_crm: boolean,
   type_blk: boolean,
 
+  date_start: any,
+  date_end: any,
+  date_shift1: boolean,
+  date_shift2: boolean,
+  date_shift3: boolean,
+
+  barcode_date_start?: any,
+  barcode_date_end?: any,
+
   sort_asc: boolean,
   page_index: number,
   page_size: number
@@ -31,6 +40,15 @@ export class HandbrakeHelper {
       type_crm: true,
       type_blk: true,
 
+      date_start: null,
+      date_end: null,
+      date_shift1: true,
+      date_shift2: true,
+      date_shift3: true,
+
+      barcode_date_start: null,
+      barcode_date_end: null,
+
       sort_asc: true,
       page_index: 0,
       page_size: 0,
@@ -45,6 +63,15 @@ export class HandbrakeHelper {
       type_crm: options.type_crm,
       type_blk: options.type_blk,
 
+      date_start: options.date_start,
+      date_end: options.date_end,
+      date_shift1: options.date_shift1,
+      date_shift2: options.date_shift2,
+      date_shift3: options.date_shift3,
+
+      barcode_date_start: options.barcode_date_start,
+      barcode_date_end: options.barcode_date_end,
+
       sort_asc: true,
       page_index: 0,
       page_size: 0,
@@ -55,7 +82,14 @@ export class HandbrakeHelper {
       !options.include_fault ||
       !options.include_no_fault ||
       !options.type_crm ||
-      !options.type_blk
+      !options.type_blk ||
+      options.date_start ? true : false ||
+      options.date_end ? true : false ||
+      !options.date_shift1 ||
+      !options.date_shift2 ||
+      !options.date_shift3 ||
+      options.barcode_date_start ? true : false ||
+      options.barcode_date_end ? true : false
   }
 
   public static validate(obj: HandbrakeItem): void {

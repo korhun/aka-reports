@@ -240,6 +240,15 @@ def search(options):
     type_crm = options.get("type_crm", True)
     type_blk = options.get("type_blk", True)
 
+    date_start = options.get("date_start", None)
+    date_end = options.get("date_end", None)
+    date_shift1 = options.get("date_shift1", True)
+    date_shift2 = options.get("date_shift2", True)
+    date_shift3 = options.get("date_shift3", True)
+
+    barcode_date_start = options.get("barcode_date_start", None)
+    barcode_date_end = options.get("barcode_date_end", None)
+
     sort_asc = options.get("sort_asc", True)
     page_index = options.get("page_index", 0)
     page_size = options.get("page_size", 0)

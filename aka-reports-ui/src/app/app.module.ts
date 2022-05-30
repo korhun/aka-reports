@@ -20,6 +20,8 @@ import { getTurkishPaginatorIntl } from './utils/turkish-paginator-intl';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeTr from '@angular/common/locales/tr';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 registerLocaleData(localeTr);
 
@@ -40,6 +42,8 @@ registerLocaleData(localeTr);
     HttpClientModule,
     ReactiveFormsModule,
     AngularSplitModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
@@ -50,7 +54,8 @@ registerLocaleData(localeTr);
   providers: [
     // { provide: LOCALE_ID, useValue: "en-US" },
     { provide: LOCALE_ID, useValue: "tr-TR" },
-    { provide: MatPaginatorIntl, useValue: getTurkishPaginatorIntl() }
+    { provide: MatPaginatorIntl, useValue: getTurkishPaginatorIntl() },
+    MatDatepickerModule,
   ],
   bootstrap: [AppComponent]
 })

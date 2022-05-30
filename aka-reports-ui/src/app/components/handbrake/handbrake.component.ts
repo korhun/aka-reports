@@ -15,7 +15,6 @@ import { HandbrakeService } from 'src/app/services/handbrake.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
-
 @Component({
   selector: 'app-handbrake',
   templateUrl: './handbrake.component.html',
@@ -33,8 +32,8 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   @ViewChild('input') input!: ElementRef;
 
   // length = 0;
-  pageSize = 10;
-  pageSizeOptions: number[] = [10, 50, 1000];
+  pageSize = 20;
+  pageSizeOptions: number[] = [20, 50, 1000];
 
   optionsForm: FormGroup;
 
@@ -60,9 +59,8 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       debounceTime(500),
       distinctUntilChanged(),
       // switchMap(val=>val),
-      tap(() => this.loadHandbrakesPage())
-    )
-      .subscribe();
+      tap(() => this.loadHandbrakesPage(true))
+    ).subscribe();
   }
 
 
@@ -83,16 +81,19 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         debounceTime(150),
-        tap(() => this.loadHandbrakesPage())
+        tap(() => this.loadHandbrakesPage(false))
       )
       .subscribe();
 
-    this.loadHandbrakesPage()
+    this.loadHandbrakesPage(true)
     this.cdr.detectChanges();
   }
 
-  loadHandbrakesPage() {
+  loadHandbrakesPage(firstPage:boolean) {
     this.cdr.detectChanges();
+    if (firstPage) {
+      this.paginator.pageIndex = 0
+    }
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     opts.sort_asc = this.sort.direction == "asc";
     opts.page_index = this.paginator.pageIndex;
@@ -112,31 +113,32 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   public clearAllFilter() {
     this.barcodeFilterControl.setValue("")
     this.paginator.pageIndex = 0
-    this.optionsForm.setValue(HandbrakeHelper.createDefaultOptions())
+    const opts = HandbrakeHelper.createDefaultOptions()
+    this.optionsForm.setValue(opts)
   }
 
   checkChanged_includeFault() {
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     if (!opts.include_fault && !opts.include_no_fault) {
-      this.optionsForm.patchValue({include_no_fault: true});
+      this.optionsForm.patchValue({ include_no_fault: true });
     }
   }
   checkChanged_includeNoFault() {
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     if (!opts.include_fault && !opts.include_no_fault) {
-      this.optionsForm.patchValue({include_fault: true});
+      this.optionsForm.patchValue({ include_fault: true });
     }
   }
   checkChanged_typeCrm() {
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     if (!opts.type_crm && !opts.type_blk) {
-      this.optionsForm.patchValue({type_blk: true});
+      this.optionsForm.patchValue({ type_blk: true });
     }
   }
   checkChanged_typeBlk() {
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     if (!opts.type_crm && !opts.type_blk) {
-      this.optionsForm.patchValue({type_crm: true});
+      this.optionsForm.patchValue({ type_crm: true });
     }
   }
 

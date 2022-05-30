@@ -1,13 +1,13 @@
 <ng-container>
   <div class="search-container">
-    <as-split direction="horizontal">
-      <as-split-area [size]="20">
+    <as-split direction="horizontal" unit="pixel">
+      <as-split-area [size]="270">
         <div class="search-container-left mat-elevation-z8">
           <div class="search-left">
             <form class="options-form" [formGroup]="optionsForm">
               <section class="fault-check-form">
                 <mat-form-field class="full-width" appearance="outline">
-                  <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
+                  <input type="text" placeholder="Barkod Ara" aria-label="Barkod Ara" matInput #input
                     [formControl]="barcodeFilterControl" formControlName="barcode_filter" autocomplete="off"
                     autocorrect="off" autocapitalize="off" spellcheck="false">
                   <button *ngIf="barcodeFilterExists" matSuffix mat-icon-button aria-label="clear search"
@@ -19,7 +19,7 @@
                   </button> -->
                 </mat-form-field>
 
-                
+
                 <p>
                   <mat-checkbox formControlName="include_fault" (change)="checkChanged_includeFault()">Hatalı
                   </mat-checkbox>
@@ -41,9 +41,48 @@
                   <img src="../../../assets/img/blk.png" class="type-image" />
                 </p>
 
-                <mat-divider horizontal></mat-divider>
 
-                <button matSuffix mat-flat-button aria-label="clear all search" class="width100" (click)="clearAllFilter()" [disabled]="noFilterExists" type="button">
+                <mat-form-field class="full-width" appearance="outline">
+                  <mat-label>Kontrol Tarihi</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Başlangıç" formControlName="date_start">
+                    <input matEndDate placeholder="Bitiş" formControlName="date_end">
+                  </mat-date-range-input>
+                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+
+                  <p></p>
+                  <p>
+                    <mat-checkbox formControlName="date_shift1" (change)="checkChanged_includeFault()">1. Vardiya (08:00 - 16:00)
+                    </mat-checkbox>
+                  </p>
+                  <p>
+                    <mat-checkbox formControlName="date_shift2" (change)="checkChanged_includeNoFault()">2. Vardiya (16:00 - 24:00)
+                    </mat-checkbox>
+                  </p>
+                  <p>
+                    <mat-checkbox formControlName="date_shift3" (change)="checkChanged_includeNoFault()">3. Vardiya (24:00 - 08:00)
+                    </mat-checkbox>
+                  </p>
+
+                </mat-form-field>
+
+                <mat-form-field class="full-width" appearance="outline">
+                  <mat-label>Barkod Tarihi</mat-label>
+                  <mat-date-range-input [rangePicker]="picker2">
+                    <input matStartDate placeholder="Başlangıç" formControlName="barcode_date_start">
+                    <input matEndDate placeholder="Bitiş" formControlName="barcode_date_end">
+                  </mat-date-range-input>
+                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker2></mat-date-range-picker>
+                </mat-form-field>
+
+
+
+                <button matSuffix mat-flat-button aria-label="clear all search" class="width100"
+                  (click)="clearAllFilter()" [disabled]="noFilterExists" type="button">
                   Filtreyi Temizle
                 </button>
 
@@ -53,7 +92,7 @@
         </div>
       </as-split-area>
 
-      <as-split-area [size]="80">
+      <as-split-area>
         <div class="search-container-right mat-elevation-z8">
 
           <div class="search-right">
@@ -61,7 +100,7 @@
 
 
             <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-              <mat-spinner></mat-spinner>
+              <mat-spinner color="accent"></mat-spinner>
             </div>
 
             <mat-table class="handbrakes-table mat-elevation-z8" [dataSource]="dataSource" matSort matSortActive="date"
