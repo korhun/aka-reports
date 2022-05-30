@@ -75,9 +75,20 @@ mat-divider {
   margin-top: 15em;
 }
 
-
 .type-image {
-  height: 36px;
+  height: 2em;
+  padding: 0 0 0 1em;
+  margin-bottom: -0.5em;
+}
+.table-type-image {
+  height: 2em;
+}
+.centered{
+  display: table;
+  margin: 0 auto;
+}
+.width100{
+  width: 100%;
 }
 
 // .example-header {

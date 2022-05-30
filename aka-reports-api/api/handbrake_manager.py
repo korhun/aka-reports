@@ -2,6 +2,11 @@ import datetime
 import os.path
 import logging
 import sys
+import threading
+import time
+
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 from utils import file_helper, string_helper
 from utils.label_file import LabelFile
@@ -11,6 +16,10 @@ _key_to_barcode = {}
 _barcode_to_keys = {}
 _keys_asc = []
 _keys_desc = []
+_observer = {
+    "path": "",
+    "cached": False
+}
 
 
 def _enumerate_labels(label_fn):
@@ -93,36 +102,93 @@ def _create_handbrake(barcode, dir_path):
     if not img_exists:
         return None
     res["time"] = datetime.datetime.fromtimestamp(min(times)).isoformat()
-    res["type"] = "crm" if string_helper.wildcard(barcode, "*_crm_*", case_insensitive=True) else "blk"
+    res["type"] = barcode_type(barcode)
     res["has_fault"] = has_fault
     return res
 
 
+def barcode_type(barcode):
+    return "crm" if string_helper.wildcard(barcode, "*_crm_*", case_insensitive=True) else "blk"
+
+
+def _watch_workspace():
+    observer = Observer()
+    event_handler = Handler()
+    observer.schedule(event_handler, _observer["path"], recursive=True)
+    observer.start()
+    try:
+        while True:
+            time.sleep(5)
+    except:
+        observer.stop()
+        print("Error")
+    observer.join()
+
+
+class Handler(FileSystemEventHandler):
+
+    @staticmethod
+    def on_any_event(event):
+        _workspace_changed()
+        # print(event)
+        # if event.is_directory:
+        #     return None
+        #
+        # elif event.event_type == 'created':
+        #     # Take any action here when a file is first created.
+        #     print("Received created event - %s." % event.src_path)
+        #
+        # elif event.event_type == 'modified':
+        #     # Taken any action here when a file is modified.
+        #     print("Received modified event - %s." % event.src_path)
+
+
+def _workspace_changed():
+    _observer["cached"] = False
+
+
+def _update_workspace_cache_if_required():
+    if _observer["cached"]:
+        return
+    try:
+        workspace_dir = _observer["path"]
+
+        _key_to_handbrake.clear()
+        _key_to_barcode.clear()
+        _barcode_to_keys.clear()
+        _keys_asc.clear()
+        _keys_desc.clear()
+
+        for dir_path in file_helper.enumerate_directories(workspace_dir, recursive=False):
+            for fn in file_helper.enumerate_files(dir_path, recursive=False, wildcard_pattern="*_cam0.png", case_insensitive=True):
+                dir_name, name, extension = file_helper.get_file_name_extension(fn)
+                barcode = name[:-5]
+                handbrake = _create_handbrake(barcode, dir_path)
+                if handbrake:
+                    key = handbrake["key"]
+                    _keys_asc.append(key)
+                    _key_to_handbrake[key] = handbrake
+                    _key_to_barcode[key] = barcode
+                    if barcode in _barcode_to_keys:
+                        _barcode_to_keys[barcode].append(key)
+                    else:
+                        _barcode_to_keys[barcode] = [key]
+
+        _keys_asc.sort(key=lambda x: _key_to_handbrake[x]["time"])
+        _keys_desc.extend(_keys_asc)
+        _keys_desc.reverse()
+    finally:
+        _observer["cached"] = True
+
+
 def set_workspace_dir(workspace_dir):
-    _key_to_handbrake.clear()
-    _key_to_barcode.clear()
-    _barcode_to_keys.clear()
-    _keys_asc.clear()
-    _keys_desc.clear()
-
-    for dir_path in file_helper.enumerate_directories(workspace_dir, recursive=False):
-        for fn in file_helper.enumerate_files(dir_path, recursive=False, wildcard_pattern="*_cam0.png", case_insensitive=True):
-            dir_name, name, extension = file_helper.get_file_name_extension(fn)
-            barcode = name[:-5]
-            handbrake = _create_handbrake(barcode, dir_path)
-            if handbrake:
-                key = handbrake["key"]
-                _keys_asc.append(key)
-                _key_to_handbrake[key] = handbrake
-                _key_to_barcode[key] = barcode
-                if barcode in _barcode_to_keys:
-                    _barcode_to_keys[barcode].append(key)
-                else:
-                    _barcode_to_keys[barcode] = [key]
-
-    _keys_asc.sort(key=lambda x: _key_to_handbrake[x]["time"])
-    _keys_desc.extend(_keys_asc)
-    _keys_desc.reverse()
+    logging.info(f"workspace_dir: {workspace_dir}")
+    if _observer["path"] != workspace_dir:
+        _observer["path"] = workspace_dir
+        background_thread = threading.Thread(target=_watch_workspace, args=())
+        background_thread.daemon = True
+        background_thread.start()
+    _workspace_changed()
 
 
 def get_handbrake_info(key, options):
@@ -145,23 +211,34 @@ def get_handbrake_info(key, options):
 
 
 def search(options):
-
     def is_ok():
-        if not (no_pattern or string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True)):
+        barcode = _key_to_barcode[key]
+        if not (no_pattern or string_helper.wildcard(barcode, pattern, case_insensitive=True)):
             return False
-        if include_fault and include_no_fault:
-            return True
-        handbrake = _key_to_handbrake[key]
-        if not include_fault and handbrake["has_fault"]:
-            return False
-        if not include_no_fault and not handbrake["has_fault"]:
-            return False
+
+        if not include_fault or not include_no_fault:
+            handbrake = _key_to_handbrake[key]
+            if not include_fault and handbrake["has_fault"]:
+                return False
+            if not include_no_fault and not handbrake["has_fault"]:
+                return False
+
+        if not type_crm or not type_blk:
+            btype = barcode_type(barcode)
+            if not type_crm and btype == "crm":
+                return False
+            if not type_blk and btype == "blk":
+                return False
+
         return True
 
+    _update_workspace_cache_if_required()
     only_count = options.get("only_count", False)
     barcode_filter = options.get("barcode_filter", "")
     include_fault = options.get("include_fault", True)
     include_no_fault = options.get("include_no_fault", True)
+    type_crm = options.get("type_crm", True)
+    type_blk = options.get("type_blk", True)
 
     sort_asc = options.get("sort_asc", True)
     page_index = options.get("page_index", 0)

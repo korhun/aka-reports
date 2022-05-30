@@ -25,8 +25,6 @@ def main():
         assert(os.path.isfile(path))
         with open(path) as f:
             config = yaml.load(f, Loader=yaml.FullLoader)
-            workspace_dir = config["workspace_dir"]
-            logging.info(f"workspace_dir: {workspace_dir}")
             handbrake_manager.set_workspace_dir(config["workspace_dir"])
         app.start(9090)
     except Exception as e:

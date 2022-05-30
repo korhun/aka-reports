@@ -38,12 +38,16 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
   optionsForm: FormGroup;
 
-  public get searchExists(): boolean {
+  public get barcodeFilterExists(): boolean {
     const opts: HandbrakeSearchOptions = this.optionsForm.value;
     if (opts.barcode_filter)
       return true;
     else
       return false;
+  }
+  public get noFilterExists(): boolean {
+    const opts: HandbrakeSearchOptions = this.optionsForm.value;
+    return !HandbrakeHelper.filterExists(opts)
   }
   constructor(fb: FormBuilder, private handbrakeService: HandbrakeService, private cdr: ChangeDetectorRef) {
     this.optionsForm = fb.group(HandbrakeHelper.createDefaultOptions());
@@ -100,11 +104,15 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   public clearBarcodeFilter() {
     this.barcodeFilterControl.setValue("")
     this.paginator.pageIndex = 0
-    // this.loadHandbrakesPage()
 
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     opts.barcode_filter = ""
     this.optionsForm.setValue(opts)
+  }
+  public clearAllFilter() {
+    this.barcodeFilterControl.setValue("")
+    this.paginator.pageIndex = 0
+    this.optionsForm.setValue(HandbrakeHelper.createDefaultOptions())
   }
 
   checkChanged_includeFault() {
@@ -117,6 +125,18 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     if (!opts.include_fault && !opts.include_no_fault) {
       this.optionsForm.patchValue({include_fault: true});
+    }
+  }
+  checkChanged_typeCrm() {
+    const opts: HandbrakeSearchOptions = this.optionsForm.value
+    if (!opts.type_crm && !opts.type_blk) {
+      this.optionsForm.patchValue({type_blk: true});
+    }
+  }
+  checkChanged_typeBlk() {
+    const opts: HandbrakeSearchOptions = this.optionsForm.value
+    if (!opts.type_crm && !opts.type_blk) {
+      this.optionsForm.patchValue({type_crm: true});
     }
   }
 

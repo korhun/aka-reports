@@ -1,3 +1,4 @@
+
 export interface HandbrakeItem {
   key: number;
   barcode: string;
@@ -12,6 +13,8 @@ export interface HandbrakeSearchOptions {
   barcode_filter: string,
   include_fault: boolean,
   include_no_fault: boolean,
+  type_crm: boolean,
+  type_blk: boolean,
 
   sort_asc: boolean,
   page_index: number,
@@ -25,6 +28,8 @@ export class HandbrakeHelper {
       barcode_filter: "",
       include_fault: true,
       include_no_fault: true,
+      type_crm: true,
+      type_blk: true,
 
       sort_asc: true,
       page_index: 0,
@@ -37,11 +42,20 @@ export class HandbrakeHelper {
       barcode_filter: options.barcode_filter,
       include_fault: options.include_fault,
       include_no_fault: options.include_no_fault,
+      type_crm: options.type_crm,
+      type_blk: options.type_blk,
 
       sort_asc: true,
       page_index: 0,
       page_size: 0,
     }
+  }
+  public static filterExists(options: HandbrakeSearchOptions): boolean {
+    return options.barcode_filter ? true : false ||
+      !options.include_fault ||
+      !options.include_no_fault ||
+      !options.type_crm ||
+      !options.type_blk
   }
 
   public static validate(obj: HandbrakeItem): void {

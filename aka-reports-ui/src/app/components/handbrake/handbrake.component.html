@@ -8,9 +8,9 @@
               <section class="fault-check-form">
                 <mat-form-field class="full-width" appearance="outline">
                   <input type="text" placeholder="Elcik Barkodu Ara" aria-label="Barkod Ara" matInput #input
-                    [formControl]="barcodeFilterControl" formControlName="barcode_filter"
-                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                  <button *ngIf="searchExists" matSuffix mat-icon-button aria-label="clear search"
+                    [formControl]="barcodeFilterControl" formControlName="barcode_filter" autocomplete="off"
+                    autocorrect="off" autocapitalize="off" spellcheck="false">
+                  <button *ngIf="barcodeFilterExists" matSuffix mat-icon-button aria-label="clear search"
                     (click)="clearBarcodeFilter()" type="button">
                     <mat-icon>close</mat-icon>
                   </button>
@@ -18,12 +18,35 @@
                     <mat-icon>search</mat-icon>
                   </button> -->
                 </mat-form-field>
+
+                
                 <p>
-                  <mat-checkbox formControlName="include_fault" (change)="checkChanged_includeFault()">Hatalı</mat-checkbox>
+                  <mat-checkbox formControlName="include_fault" (change)="checkChanged_includeFault()">Hatalı
+                  </mat-checkbox>
                 </p>
                 <p>
-                  <mat-checkbox formControlName="include_no_fault" (change)="checkChanged_includeNoFault()">Hatasız</mat-checkbox>
+                  <mat-checkbox formControlName="include_no_fault" (change)="checkChanged_includeNoFault()">Hatasız
+                  </mat-checkbox>
                 </p>
+
+                <mat-divider horizontal></mat-divider>
+
+                <p>
+                  <mat-checkbox formControlName="type_crm" (change)="checkChanged_typeCrm()">Krom Düğmeli</mat-checkbox>
+                  <img src="../../../assets/img/crm.png" class="type-image" />
+                </p>
+                <p>
+                  <mat-checkbox formControlName="type_blk" (change)="checkChanged_typeBlk()">Siyah Düğmeli
+                  </mat-checkbox>
+                  <img src="../../../assets/img/blk.png" class="type-image" />
+                </p>
+
+                <mat-divider horizontal></mat-divider>
+
+                <button matSuffix mat-flat-button aria-label="clear all search" class="width100" (click)="clearAllFilter()" [disabled]="noFilterExists" type="button">
+                  Filtreyi Temizle
+                </button>
+
               </section>
             </form>
           </div>
@@ -52,7 +75,8 @@
               <ng-container matColumnDef="hasFault">
                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
                 <!-- <mat-cell class="duration-cell" *matCellDef="let handbrake">{{handbrake.has_fault}}</mat-cell> -->
-                <mat-cell *matCellDef="let handbrake"><img [src]="handbrake.imgSrc" class="type-image" /></mat-cell>
+                <mat-cell *matCellDef="let handbrake"><img [src]="handbrake.imgSrc" class="table-type-image" />
+                </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="date">
