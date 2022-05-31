@@ -32,8 +32,8 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   @ViewChild('input') input!: ElementRef;
 
   // length = 0;
-  pageSize = 20;
-  pageSizeOptions: number[] = [20, 50, 1000];
+  pageSize = 15;
+  pageSizeOptions: number[] = [15, 50, 1000];
 
   optionsForm: FormGroup;
 

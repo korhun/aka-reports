@@ -255,6 +255,14 @@ def search(options):
                 if scan_date > end:
                     return False
 
+            hour = scan_date.astimezone().hour
+            if not date_shift1 and 8 < hour < 16:
+                return False
+            if not date_shift2 and 16 < hour:
+                return False
+            if not date_shift3 and hour < 8:
+                return False
+
         return True
 
     _update_workspace_cache_if_required()
