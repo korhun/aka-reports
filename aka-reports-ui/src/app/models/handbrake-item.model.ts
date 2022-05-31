@@ -10,6 +10,12 @@ export interface HandbrakeItem {
   imgSrc: string;
 }
 
+export interface HandbrakeSearchResult {
+  handbrakes: HandbrakeItem[];
+  count: number;
+  fault_results: any[];
+}
+
 export interface HandbrakeSearchOptions {
   only_count: boolean,
   barcode_filter: string,
@@ -34,6 +40,14 @@ export interface HandbrakeSearchOptions {
 }
 
 export class HandbrakeHelper {
+  public static createDefaultHandbrakeSearchResult(): HandbrakeSearchResult {
+    return {
+      handbrakes: [],
+      count: 0,
+      fault_results: [],
+    }
+  }
+
   public static createDefaultOptions(): HandbrakeSearchOptions {
     return {
       only_count: false,
@@ -89,15 +103,15 @@ export class HandbrakeHelper {
       !options.type_crm ||
       !options.type_blk ||
       options.date_start ? true : false ||
-      options.date_end ? true : false ||
-      !options.date_shift1 ||
-      !options.date_shift2 ||
-      !options.date_shift3 ||
-      options.barcode_date_start ? true : false ||
-      options.barcode_date_end ? true : false
+        options.date_end ? true : false ||
+          !options.date_shift1 ||
+          !options.date_shift2 ||
+          !options.date_shift3 ||
+          options.barcode_date_start ? true : false ||
+            options.barcode_date_end ? true : false
   }
 
-  public static validate(obj: HandbrakeItem): void {
+  public static validateHandbrake(obj: HandbrakeItem): void {
     // if (obj.barcode == null)
     //     obj.barcode = ""
     // if (obj.has_fault == null)
@@ -109,11 +123,12 @@ export class HandbrakeHelper {
     // obj.imgSrc = "/assets/img/$.png".replace("$", obj.type + "_err" : obj.type)
   }
 
-  public static getHandbrakeItems(obj: object): HandbrakeItem[] {
-    const res = obj as HandbrakeItem[];
-    res.forEach(element => {
-      this.validate(element)
+  public static getHandbrakeSearchResult(obj: object): HandbrakeSearchResult {
+    const res = obj as HandbrakeSearchResult;
+    res.handbrakes.forEach(element => {
+      this.validateHandbrake(element)
     })
     return res
   }
+
 }

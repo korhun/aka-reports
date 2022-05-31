@@ -14,6 +14,7 @@ import { HandbrakeDataSource } from 'src/app/services/handbrake.datasource';
 import { HandbrakeService } from 'src/app/services/handbrake.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { LegendPosition } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-handbrake',
@@ -23,6 +24,55 @@ import { MatSort } from '@angular/material/sort';
 export class HandbrakeComponent implements OnInit, AfterViewInit {
   // ref: https://blog.angular-university.io/angular-material-data-table/
   // ref: https://github.com/angular-university/angular-material-course/tree/2-data-table-finished
+  // ref: https://swimlane.gitbook.io/ngx-charts/examples/pie-charts/pie-chart
+
+  // fault_pie_chart: any[] = [
+  //   {
+  //     "name": "Germany",
+  //     "value": 8940000
+  //   },
+  //   {
+  //     "name": "USA",
+  //     "value": 5000000
+  //   },
+  //   {
+  //     "name": "France",
+  //     "value": 7200000
+  //   },
+  //     {
+  //     "name": "UK",
+  //     "value": 6200000
+  //   }
+  // ]
+  // view: any[] = [700, 400];
+
+  // // options
+  // gradient: boolean = true;
+  // showLegend: boolean = false;
+  // showLabels: boolean = true;
+  // isDoughnut: boolean = false;
+  // // legendPosition: string = 'below';
+  legendPosition: LegendPosition = LegendPosition.Below;
+
+  colorScheme: any = {
+    domain: ['#e91e63', '#214185']
+  };
+
+  onSelect(data: any): void {
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  }
+
+  onActivate(data: any): void {
+    console.log('Activate', JSON.parse(JSON.stringify(data)));
+  }
+
+  onDeactivate(data: any): void {
+    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+  }
+
+
+
+
 
   dataSource!: HandbrakeDataSource;
 
@@ -89,7 +139,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  loadHandbrakesPage(firstPage:boolean) {
+  loadHandbrakesPage(firstPage: boolean) {
     this.cdr.detectChanges();
     if (firstPage) {
       this.paginator.pageIndex = 0

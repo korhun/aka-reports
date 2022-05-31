@@ -40,11 +40,23 @@ mat-divider {
 }
 .handbrakes-table {
   overflow: auto;
-  height: calc(100% - 2em);
+  // height: calc(100% - 2em);
+  height: calc(100% - 50px);
 }
 .search-right {
+  // padding: 1em;
+  // height: calc(100% - 4em);
+
+  // position: fixed;
   padding: 1em;
-  height: calc(100% - 4em);
+
+  // height: calc(100% - 14em);
+  // width: calc(100% - 23em);
+  height: calc(100vh - 172px) !important;
+  // width: calc(100% - 324px);
+  // background-color: darkolivegreen;
+  // overflow: hidden;
+
 }
 
 .full-width {
@@ -100,6 +112,9 @@ mat-divider {
 .mat-column-barcode_date {
   flex: 0 0 110px;
 }
+
+
+::ng-deep .ngx-charts text { fill: var(--color) !important; }
 
 // .example-header {
 //   position: fixed;

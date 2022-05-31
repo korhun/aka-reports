@@ -269,7 +269,6 @@ def search(options):
         return True
 
     _update_workspace_cache_if_required()
-    only_count = options.get("only_count", False)
     barcode_filter = options.get("barcode_filter", "")
     include_fault = options.get("include_fault", True)
     include_no_fault = options.get("include_no_fault", True)
@@ -297,59 +296,151 @@ def search(options):
 
     if sort_active not in ["scan_date", "barcode_date", "barcode"]:
         sort_active = "scan_date"
-    # handbrakes = sorted(_key_to_handbrake.values(), key=lambda item: item[sort_active], reverse=not sort_asc)
-    # handbrakes = sorted(_key_to_handbrake.values(), key= lambda x: _handbrake_sort_key(x, sort_active), reverse=not sort_asc)
-    # handbrakes = sorted(_key_to_handbrake.values(), key=lambda x: x[sort_active], reverse=not sort_asc)
     handbrakes = sorted(_key_to_handbrake.values(), key=lambda x: _handbrake_sort_key(x, sort_active), reverse=not sort_asc)
-    # handbrakes = list(_key_to_handbrake.values())
-    # handbrakes.sort(key=lambda item: item[sort_active], reverse=not sort_asc)
 
-    if only_count:
-        count = 0
-        for handbrake in handbrakes:
-            if is_ok():
-                count += 1
-        return count
-    else:
-        res = []
-        current_page = 0
-        current_page_count = 0
-        for handbrake in handbrakes:
-            if current_page > page_index:
-                break
-            if is_ok():
-                if current_page == page_index:
-                    res.append(get_handbrake_info(handbrake, options))
-                current_page_count += 1
-                if current_page_count >= page_size:
-                    current_page += 1
-                    current_page_count = 0
-        return res
+    res_handbrakes = []
+    res_count = 0
+    res_count_fault = 0
+    res_count_no_fault = 0
 
-# def search(barcode_filter, ascending, page_number, page_size, options):
+    current_page = 0
+    current_page_count = 0
+    count_fault = 0
+    count_no_fault = 0
+    for handbrake in handbrakes:
+        if is_ok():
+            res_count += 1
+            if handbrake["has_fault"]:
+                count_fault += 1
+            else:
+                count_no_fault += 1
+            if current_page == page_index:
+                res_handbrakes.append(get_handbrake_info(handbrake, options))
+            current_page_count += 1
+            if current_page_count >= page_size:
+                current_page += 1
+                current_page_count = 0
+    return {
+        "handbrakes": res_handbrakes,
+        "count": res_count,
+        "fault_results": [
+            {
+                "name": "Hatalı",
+                "value": count_fault,
+            },
+            {
+                "name": "Hatasız",
+                "value": count_no_fault,
+            }
+        ]
+    }
+
+
+
+#
+# def search(options):
+#     def is_ok():
+#         barcode = handbrake["barcode"]
+#         if not (no_pattern or string_helper.wildcard(barcode, pattern, case_insensitive=True)):
+#             return False
+#
+#         if not include_fault or not include_no_fault:
+#             if not include_fault and handbrake["has_fault"]:
+#                 return False
+#             if not include_no_fault and not handbrake["has_fault"]:
+#                 return False
+#
+#         if not type_crm or not type_blk:
+#             btype = barcode_type(barcode)
+#             if not type_crm and btype == "crm":
+#                 return False
+#             if not type_blk and btype == "blk":
+#                 return False
+#
+#         if date_start or date_end or not date_shift1 or not date_shift2 or not date_shift3:
+#             scan_date = dateutil.parser.isoparse(handbrake["scan_date"]).astimezone(UTC)
+#             if date_start:
+#                 start = dateutil.parser.isoparse(date_start).astimezone(UTC)
+#                 if scan_date < start:
+#                     return False
+#             if date_end:
+#                 end = dateutil.parser.isoparse(date_end).astimezone(UTC) + datetime.timedelta(days=1)
+#                 if scan_date > end:
+#                     return False
+#
+#             hour = scan_date.astimezone().hour
+#             if not date_shift1 and 8 < hour < 16:
+#                 return False
+#             if not date_shift2 and 16 < hour:
+#                 return False
+#             if not date_shift3 and hour < 8:
+#                 return False
+#
+#         if barcode_date_start or barcode_date_end:
+#             barcode_date = handbrake["barcode_date"]
+#             if not barcode_date:
+#                 return False
+#             barcode_date = dateutil.parser.isoparse(handbrake["barcode_date"]).astimezone(UTC)
+#             if barcode_date_start:
+#                 start = dateutil.parser.isoparse(barcode_date_start).astimezone(UTC)
+#                 if barcode_date < start:
+#                     return False
+#             if barcode_date_end:
+#                 end = dateutil.parser.isoparse(barcode_date_end).astimezone(UTC) + datetime.timedelta(days=1)
+#                 if barcode_date > end:
+#                     return False
+#
+#         return True
+#
+#     _update_workspace_cache_if_required()
+#     only_count = options.get("only_count", False)
+#     barcode_filter = options.get("barcode_filter", "")
+#     include_fault = options.get("include_fault", True)
+#     include_no_fault = options.get("include_no_fault", True)
+#     type_crm = options.get("type_crm", True)
+#     type_blk = options.get("type_blk", True)
+#
+#     date_start = options.get("date_start", None)
+#     date_end = options.get("date_end", None)
+#     date_shift1 = options.get("date_shift1", True)
+#     date_shift2 = options.get("date_shift2", True)
+#     date_shift3 = options.get("date_shift3", True)
+#
+#     barcode_date_start = options.get("barcode_date_start", None)
+#     barcode_date_end = options.get("barcode_date_end", None)
+#
+#     sort_asc = options.get("sort_asc", True)
+#     sort_active = options.get("sort_active", True)
+#     page_index = options.get("page_index", 0)
+#     page_size = options.get("page_size", 0)
+#
 #     pattern = f"*{barcode_filter}*" if barcode_filter else None
 #     no_pattern = pattern is None
 #
-#     current_page = 0
-#     current_page_count = 0
-#     for key in _keys_asc if ascending else _keys_desc:
-#         if current_page > page_number:
-#             return
-#         if no_pattern or string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True):
-#             if current_page == page_number:
-#                 yield get_handbrake_info(key, options)
-#             current_page_count += 1
-#             if current_page_count >= page_size:
-#                 current_page += 1
-#                 current_page_count = 0
+#     logging.info(f"barcode_filter: {barcode_filter}")
 #
+#     if sort_active not in ["scan_date", "barcode_date", "barcode"]:
+#         sort_active = "scan_date"
+#     handbrakes = sorted(_key_to_handbrake.values(), key=lambda x: _handbrake_sort_key(x, sort_active), reverse=not sort_asc)
 #
-# def get_count(barcode_filter, options):
-#     pattern = f"*{barcode_filter}*" if barcode_filter else None
-#     if pattern is None:
-#         return len(_key_to_barcode)
-#     count = 0
-#     for key in _keys_asc:
-#         if string_helper.wildcard(_key_to_barcode[key], pattern, case_insensitive=True):
-#             count += 1
-#     return count
+#     if only_count:
+#         count = 0
+#         for handbrake in handbrakes:
+#             if is_ok():
+#                 count += 1
+#         return count
+#     else:
+#         res = []
+#         current_page = 0
+#         current_page_count = 0
+#         for handbrake in handbrakes:
+#             if current_page > page_index:
+#                 break
+#             if is_ok():
+#                 if current_page == page_index:
+#                     res.append(get_handbrake_info(handbrake, options))
+#                 current_page_count += 1
+#                 if current_page_count >= page_size:
+#                     current_page += 1
+#                     current_page_count = 0
+#         return res

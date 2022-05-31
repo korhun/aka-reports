@@ -22,6 +22,7 @@ import { registerLocaleData } from '@angular/common';
 import localeTr from '@angular/common/locales/tr';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 registerLocaleData(localeTr);
 
@@ -44,6 +45,7 @@ registerLocaleData(localeTr);
     AngularSplitModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    NgxChartsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
