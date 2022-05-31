@@ -16,15 +16,6 @@ from utils.label_file import LabelFile
 from dateutil.tz import UTC
 
 _key_to_handbrake = {}
-_key_to_barcode = {}
-_barcode_to_keys = {}
-
-_keys_sorted_by_scan_date_asc = []
-_keys_sorted_by_scan_date_desc = []
-_keys_sorted_by_barcode_date_asc = []
-_keys_sorted_by_barcode_date_desc = []
-_keys_sorted_by_barcode_asc = []
-_keys_sorted_by_barcode_desc = []
 
 _observer = {
     "path": "",
@@ -146,7 +137,7 @@ def _watch_workspace():
     try:
         while True:
             time.sleep(5)
-    except:
+    except:  # noqa
         observer.stop()
         print("Error")
     observer.join()
@@ -179,13 +170,7 @@ def _update_workspace_cache_if_required():
         return
     try:
         workspace_dir = _observer["path"]
-
         _key_to_handbrake.clear()
-        _key_to_barcode.clear()
-        _barcode_to_keys.clear()
-        _keys_asc.clear()
-        _keys_desc.clear()
-
         for dir_path in file_helper.enumerate_directories(workspace_dir, recursive=False):
             for fn in file_helper.enumerate_files(dir_path, recursive=False, wildcard_pattern="*_cam0.png", case_insensitive=True):
                 dir_name, name, extension = file_helper.get_file_name_extension(fn)
@@ -193,17 +178,7 @@ def _update_workspace_cache_if_required():
                 handbrake = _create_handbrake(barcode, dir_path)
                 if handbrake:
                     key = handbrake["key"]
-                    _keys_asc.append(key)
                     _key_to_handbrake[key] = handbrake
-                    _key_to_barcode[key] = barcode
-                    if barcode in _barcode_to_keys:
-                        _barcode_to_keys[barcode].append(key)
-                    else:
-                        _barcode_to_keys[barcode] = [key]
-
-        _keys_asc.sort(key=lambda x: _key_to_handbrake[x]["scan_date"])
-        _keys_desc.extend(_keys_asc)
-        _keys_desc.reverse()
     finally:
         _observer["cached"] = True
 
@@ -218,11 +193,7 @@ def set_workspace_dir(workspace_dir):
     _workspace_changed()
 
 
-def get_handbrake_info(key, options):
-    """
-        options: optional ["only_barcode", "include_thumbs"]
-    """
-    handbrake = _key_to_handbrake[key]
+def get_handbrake_info(handbrake, options):
     if options and "only_barcode" in options:
         return handbrake["barcode"]
     res = {
@@ -238,16 +209,18 @@ def get_handbrake_info(key, options):
     return res
 
 
+def _handbrake_sort_key(handbrake, sort_active):
+    res = handbrake[sort_active]
+    return res if res else ""
+
+
 def search(options):
     def is_ok():
-        barcode = _key_to_barcode[key]
+        barcode = handbrake["barcode"]
         if not (no_pattern or string_helper.wildcard(barcode, pattern, case_insensitive=True)):
             return False
 
-        handbrake = None
-
         if not include_fault or not include_no_fault:
-            handbrake = _key_to_handbrake[key]
             if not include_fault and handbrake["has_fault"]:
                 return False
             if not include_no_fault and not handbrake["has_fault"]:
@@ -261,8 +234,6 @@ def search(options):
                 return False
 
         if date_start or date_end or not date_shift1 or not date_shift2 or not date_shift3:
-            if handbrake is None:
-                handbrake = _key_to_handbrake[key]
             scan_date = dateutil.parser.isoparse(handbrake["scan_date"]).astimezone(UTC)
             if date_start:
                 start = dateutil.parser.isoparse(date_start).astimezone(UTC)
@@ -282,8 +253,6 @@ def search(options):
                 return False
 
         if barcode_date_start or barcode_date_end:
-            if handbrake is None:
-                handbrake = _key_to_handbrake[key]
             barcode_date = handbrake["barcode_date"]
             if not barcode_date:
                 return False
@@ -326,9 +295,18 @@ def search(options):
 
     logging.info(f"barcode_filter: {barcode_filter}")
 
+    if sort_active not in ["scan_date", "barcode_date", "barcode"]:
+        sort_active = "scan_date"
+    # handbrakes = sorted(_key_to_handbrake.values(), key=lambda item: item[sort_active], reverse=not sort_asc)
+    # handbrakes = sorted(_key_to_handbrake.values(), key= lambda x: _handbrake_sort_key(x, sort_active), reverse=not sort_asc)
+    # handbrakes = sorted(_key_to_handbrake.values(), key=lambda x: x[sort_active], reverse=not sort_asc)
+    handbrakes = sorted(_key_to_handbrake.values(), key=lambda x: _handbrake_sort_key(x, sort_active), reverse=not sort_asc)
+    # handbrakes = list(_key_to_handbrake.values())
+    # handbrakes.sort(key=lambda item: item[sort_active], reverse=not sort_asc)
+
     if only_count:
         count = 0
-        for key in _keys_asc if sort_asc else _keys_desc:
+        for handbrake in handbrakes:
             if is_ok():
                 count += 1
         return count
@@ -336,12 +314,12 @@ def search(options):
         res = []
         current_page = 0
         current_page_count = 0
-        for key in _keys_asc if sort_asc else _keys_desc:
+        for handbrake in handbrakes:
             if current_page > page_index:
                 break
             if is_ok():
                 if current_page == page_index:
-                    res.append(get_handbrake_info(key, options))
+                    res.append(get_handbrake_info(handbrake, options))
                 current_page_count += 1
                 if current_page_count >= page_size:
                     current_page += 1
