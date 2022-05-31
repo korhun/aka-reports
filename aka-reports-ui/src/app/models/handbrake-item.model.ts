@@ -1,3 +1,4 @@
+import { NONE_TYPE } from "@angular/compiler";
 
 export interface HandbrakeItem {
   key: number;
@@ -27,6 +28,7 @@ export interface HandbrakeSearchOptions {
   barcode_date_end?: any,
 
   sort_asc: boolean,
+  sort_active: string,
   page_index: number,
   page_size: number
 }
@@ -51,6 +53,7 @@ export class HandbrakeHelper {
       barcode_date_end: null,
 
       sort_asc: true,
+      sort_active: "",
       page_index: 0,
       page_size: 0,
     }
@@ -74,6 +77,7 @@ export class HandbrakeHelper {
       barcode_date_end: options.barcode_date_end,
 
       sort_asc: true,
+      sort_active: "",
       page_index: 0,
       page_size: 0,
     }

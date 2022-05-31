@@ -96,6 +96,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     }
     const opts: HandbrakeSearchOptions = this.optionsForm.value
     opts.sort_asc = this.sort.direction == "asc";
+    opts.sort_active = this.sort.active;
     opts.page_index = this.paginator.pageIndex;
     opts.page_size = this.paginator.pageSize;
     this.dataSource.loadHandbrakes(opts);
