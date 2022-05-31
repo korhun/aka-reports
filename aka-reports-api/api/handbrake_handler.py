@@ -34,8 +34,20 @@ class HandbrakeHandler(BaseHandler, ABC):
             barcode_filter: string,
             include_fault: boolean,
             include_no_fault: boolean,
+            type_crm: boolean,
+            type_blk: boolean,
+
+            date_start: any,
+            date_end: any,
+            date_shift1: boolean,
+            date_shift2: boolean,
+            date_shift3: boolean,
+
+            barcode_date_start?: any,
+            barcode_date_end?: any,
 
             sort_asc: boolean,
+            sort_active: string,
             page_index: number,
             page_size: number
         }

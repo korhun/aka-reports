@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import logging
+import re
 import sys
 import threading
 import time
@@ -17,8 +18,14 @@ from dateutil.tz import UTC
 _key_to_handbrake = {}
 _key_to_barcode = {}
 _barcode_to_keys = {}
-_keys_asc = []
-_keys_desc = []
+
+_keys_sorted_by_scan_date_asc = []
+_keys_sorted_by_scan_date_desc = []
+_keys_sorted_by_barcode_date_asc = []
+_keys_sorted_by_barcode_date_desc = []
+_keys_sorted_by_barcode_asc = []
+_keys_sorted_by_barcode_desc = []
+
 _observer = {
     "path": "",
     "cached": False
@@ -51,8 +58,19 @@ def _create_key(barcode, dir_path):
     return hash(f"{barcode}:{dir_path}".encode("utf-8"))
 
 
-def _get_datetime_from_barcode(barcode) -> object:
-    return None
+def _get_datetime_from_barcode(barcode):
+    try:
+        if barcode:
+            # res = re.search("_(.([0-9])*)\.(.([0-9])*)\.(.([0-9])*)_", barcode)
+            res = re.search(r"_(.(\d)*)\.(.(\d)*)\.(.(\d)*)_", barcode)
+            if res:
+                txt = res.group()
+                if txt:
+                    txt = txt.replace("_", "")
+                    date = dateutil.parser.parse(txt)
+                    return date.isoformat()
+    except:  # noqa
+        return None
 
 
 def _create_handbrake(barcode, dir_path):
@@ -263,6 +281,22 @@ def search(options):
             if not date_shift3 and hour < 8:
                 return False
 
+        if barcode_date_start or barcode_date_end:
+            if handbrake is None:
+                handbrake = _key_to_handbrake[key]
+            barcode_date = handbrake["barcode_date"]
+            if not barcode_date:
+                return False
+            barcode_date = dateutil.parser.isoparse(handbrake["barcode_date"]).astimezone(UTC)
+            if barcode_date_start:
+                start = dateutil.parser.isoparse(barcode_date_start).astimezone(UTC)
+                if barcode_date < start:
+                    return False
+            if barcode_date_end:
+                end = dateutil.parser.isoparse(barcode_date_end).astimezone(UTC) + datetime.timedelta(days=1)
+                if barcode_date > end:
+                    return False
+
         return True
 
     _update_workspace_cache_if_required()
@@ -283,6 +317,7 @@ def search(options):
     barcode_date_end = options.get("barcode_date_end", None)
 
     sort_asc = options.get("sort_asc", True)
+    sort_active = options.get("sort_active", True)
     page_index = options.get("page_index", 0)
     page_size = options.get("page_size", 0)
 

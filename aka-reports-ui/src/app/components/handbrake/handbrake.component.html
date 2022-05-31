@@ -126,11 +126,11 @@
 
               <ng-container matColumnDef="barcode_date">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Barkod Tarihi</mat-header-cell>
-                <mat-cell *matCellDef="let handbrake">{{handbrake.barcode_date | date:'medium'}}</mat-cell>
+                <mat-cell *matCellDef="let handbrake">{{handbrake.barcode_date | date: 'mediumDate'}}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="barcode">
-                <mat-header-cell *matHeaderCellDef>Barkod</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Barkod</mat-header-cell>
                 <mat-cell class="description-cell" *matCellDef="let handbrake">{{handbrake.barcode}}</mat-cell>
               </ng-container>
 

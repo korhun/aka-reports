@@ -1,3 +1,4 @@
+import re
 from fnmatch import fnmatch
 
 
@@ -21,3 +22,9 @@ def wildcard_has_match(list_txt, pattern, case_insensitive=True):
         if wildcard(txt, pattern, case_insensitive):
             return True
     return False
+
+
+def between(text, start, end):
+    res = re.search(f"{start}(.*){end}", text)
+    if res:
+        return res.group(1)
