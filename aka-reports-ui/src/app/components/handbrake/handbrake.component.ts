@@ -52,7 +52,8 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   // showLabels: boolean = true;
   // isDoughnut: boolean = false;
   // // legendPosition: string = 'below';
-  legendPosition: LegendPosition = LegendPosition.Below;
+  pieLegendPosition: LegendPosition = LegendPosition.Below;
+  graphLegendPosition: LegendPosition = LegendPosition.Right;
 
   faultColorScheme: any = {
     domain: ['#214185', '#e91e63']

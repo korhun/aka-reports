@@ -146,53 +146,49 @@
             <mat-tab label="Grafikler">
               <div class="graphics-right">
 
-                <div class="info-cards">
-                  <mat-card>
-                    <mat-card-header>
-                      <mat-card-title>Toplam {{dataSource.length$ | async}} Elcik</mat-card-title>
-                      <mat-card-subtitle></mat-card-subtitle>
-                    </mat-card-header>
-                    <div class="small-text">&nbsp;</div>
-                    <mat-divider horizontal></mat-divider>
-                    <mat-card-content>
-                      <p></p>
-                      <p>Hatalı: {{dataSource.faultCount$ | async}}</p>
-                      <p>Hatasız: {{dataSource.noFaultCount$ | async}}</p>
-                      <mat-divider horizontal></mat-divider>
+                <div class="graphics-row">
+
+                  <div class="info-cards">
+                    <mat-card>
+                      <mat-card-header>
+                        <mat-card-title>Toplam {{dataSource.length$ | async}} elcik</mat-card-title>
+                        <mat-card-subtitle></mat-card-subtitle>
+                      </mat-card-header>
                       <div class="small-text">&nbsp;</div>
-                      <p>Krom Düğmeli: {{dataSource.typeCrmCount$ | async}}</p>
-                      <p>Siyah Düğmeli: {{dataSource.typeBlkCount$ | async}}</p>
-                      <p>Hatalı Barkod: {{dataSource.typeUnknownCount$ | async}}</p>
-                    </mat-card-content>
-                  </mat-card>
+                      <mat-divider horizontal></mat-divider>
+                      <mat-card-content>
+                        <p></p>
+                        <p>{{dataSource.noFaultCount$ | async}} hatasız</p>
+                        <p>{{dataSource.faultCount$ | async}} hatalı</p>
+                        <mat-divider horizontal></mat-divider>
+                        <div class="small-text">&nbsp;</div>
+                        <p>{{dataSource.typeCrmCount$ | async}} krom düğmeli</p>
+                        <p>{{dataSource.typeBlkCount$ | async}} siyah düğmeli</p>
+                        <p>{{dataSource.typeUnknownCount$ | async}} hatalı barkod</p>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+
+                  <ngx-charts-pie-chart [view]="[300, 250]" [scheme]="faultColorScheme"
+                    [results]="dataSource.faultResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
+                    [legendPosition]="pieLegendPosition" [labels]="false" [doughnut]="false" (select)="onSelect($event)"
+                    (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+                  </ngx-charts-pie-chart>
+
+                  <ngx-charts-pie-chart [view]="[400, 250]" [scheme]="typeColorScheme"
+                    [results]="dataSource.typeResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
+                    [legendPosition]="pieLegendPosition" [labels]="false" [doughnut]="false">
+                  </ngx-charts-pie-chart>
                 </div>
 
-                <ngx-charts-pie-chart [view]="[300, 250]" [scheme]="faultColorScheme"
-                  [results]="dataSource.faultResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
-                  [legendPosition]="legendPosition" [labels]="false" [doughnut]="false" (select)="onSelect($event)"
-                  (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-                </ngx-charts-pie-chart>
-
-                <ngx-charts-pie-chart [view]="[400, 250]" [scheme]="typeColorScheme"
-                  [results]="dataSource.typeResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
-                  [legendPosition]="legendPosition" [labels]="false" [doughnut]="false">
-                </ngx-charts-pie-chart>
-
-
-                <ngx-charts-area-chart
-                  [view]="[700, 300]"
-                  [scheme]="countSeriesColorScheme"
-                  [legend]="true" [legendTitle]="''" [legendPosition]="legendPosition"
-                  [showXAxisLabel]="true"
-                  [showYAxisLabel]="true"
-                  [xAxis]="true"
-                  [yAxis]="true"
-                  [xAxisLabel]="''"
-                  [yAxisLabel]="''"
-                  [timeline]="true"
-                  [results]="dataSource.countSeries$ | async"
-                  (select)="onSelect($event)">
-                </ngx-charts-area-chart>
+                <div class="graphics-row">
+                  <ngx-charts-area-chart-stacked [view]="[1000, 300]" [scheme]="countSeriesColorScheme" [legend]="true"
+                    [legendTitle]="''" [legendPosition]="graphLegendPosition" [showXAxisLabel]="true" [showYAxisLabel]="true"
+                    [xAxis]="true" [yAxis]="true" [showXAxisLabel]="false" [yAxisLabel]="'Elcik Sayısı'" [timeline]="true"
+                    [gradient] = "true"
+                    [results]="dataSource.countSeries$ | async" (select)="onSelect($event)">
+                  </ngx-charts-area-chart-stacked>
+                </div>
 
               </div>
 

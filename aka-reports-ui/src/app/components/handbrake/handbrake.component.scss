@@ -71,6 +71,17 @@
   align-items: flex-start;
 }
 
+.graphics-row{
+  display: flex;
+  flex-direction: row;
+  padding: 2em;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .full-width {
   width: 100%;
 }
@@ -134,13 +145,21 @@
   height: 10px !important;
 }
 .info-cards{
-  padding: 1.5em;
+  padding-right: 3.5em;
+  // width: 14em;
 }
 ngx-charts-pie-chart{
   margin-left: 20px;
   margin-right: -10px;
 }
 
+::ng-deep .ngx-charts .gridline-path {
+  stroke: var(--grid-color) !important;
+}
+
+::ng-deep .chart-legend .legend-label .active .legend-label-text{
+  color: var(--color) !important;
+}
 
 // .example-header {
 //   position: fixed;
