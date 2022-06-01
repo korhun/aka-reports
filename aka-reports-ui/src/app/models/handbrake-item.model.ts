@@ -15,6 +15,7 @@ export interface HandbrakeSearchResult {
   count: number;
   fault_results: any[];
   type_results: any[];
+  count_series: any[];
 }
 
 export interface HandbrakeSearchOptions {
@@ -48,6 +49,7 @@ export class HandbrakeHelper {
       count: 0,
       fault_results: [],
       type_results: [],
+      count_series: [],
     }
   }
 

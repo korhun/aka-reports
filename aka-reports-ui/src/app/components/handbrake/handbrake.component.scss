@@ -129,6 +129,19 @@
   fill: var(--color) !important;
 }
 
+.small-text {
+  font-size: 1px;
+  height: 10px !important;
+}
+.info-cards{
+  padding: 1.5em;
+}
+ngx-charts-pie-chart{
+  margin-left: 20px;
+  margin-right: -10px;
+}
+
+
 // .example-header {
 //   position: fixed;
 //   top: 0;

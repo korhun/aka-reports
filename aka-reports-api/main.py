@@ -1,3 +1,4 @@
+import locale
 import os
 import sys
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     try:
+        locale.setlocale(locale.LC_ALL, "tr")
         # import logging.config
         # logging.config.fileConfig('logging.conf')
         if app_helper.is_debugging():

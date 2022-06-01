@@ -1,4 +1,3 @@
-import abc
 from typing import Any, Optional, Awaitable
 
 from tornado import httputil

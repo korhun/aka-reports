@@ -152,13 +152,14 @@
                       <mat-card-title>Toplam {{dataSource.length$ | async}} Elcik</mat-card-title>
                       <mat-card-subtitle></mat-card-subtitle>
                     </mat-card-header>
+                    <div class="small-text">&nbsp;</div>
                     <mat-divider horizontal></mat-divider>
                     <mat-card-content>
                       <p></p>
                       <p>Hatalı: {{dataSource.faultCount$ | async}}</p>
                       <p>Hatasız: {{dataSource.noFaultCount$ | async}}</p>
                       <mat-divider horizontal></mat-divider>
-                      <small>&nbsp;</small>
+                      <div class="small-text">&nbsp;</div>
                       <p>Krom Düğmeli: {{dataSource.typeCrmCount$ | async}}</p>
                       <p>Siyah Düğmeli: {{dataSource.typeBlkCount$ | async}}</p>
                       <p>Hatalı Barkod: {{dataSource.typeUnknownCount$ | async}}</p>
@@ -172,11 +173,27 @@
                   (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
                 </ngx-charts-pie-chart>
 
-
                 <ngx-charts-pie-chart [view]="[400, 250]" [scheme]="typeColorScheme"
                   [results]="dataSource.typeResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
                   [legendPosition]="legendPosition" [labels]="false" [doughnut]="false">
                 </ngx-charts-pie-chart>
+
+
+                <ngx-charts-area-chart
+                  [view]="[700, 300]"
+                  [scheme]="countSeriesColorScheme"
+                  [legend]="true" [legendTitle]="''" [legendPosition]="legendPosition"
+                  [showXAxisLabel]="true"
+                  [showYAxisLabel]="true"
+                  [xAxis]="true"
+                  [yAxis]="true"
+                  [xAxisLabel]="''"
+                  [yAxisLabel]="''"
+                  [timeline]="true"
+                  [results]="dataSource.countSeries$ | async"
+                  (select)="onSelect($event)">
+                </ngx-charts-area-chart>
+
               </div>
 
             </mat-tab>

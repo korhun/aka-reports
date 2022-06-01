@@ -55,10 +55,13 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   legendPosition: LegendPosition = LegendPosition.Below;
 
   faultColorScheme: any = {
-    domain: ['#e91e63', '#214185']
+    domain: ['#214185', '#e91e63']
   };
   typeColorScheme: any = {
     domain: ['#d3d3d3', '#36394b', '#e91e63']
+  };
+  countSeriesColorScheme: any = {
+    domain: ['#214185', '#e91e63']
   };
 
   onSelect(data: any): void {
@@ -183,6 +186,14 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       this.optionsForm.patchValue({ include_fault: true });
     }
   }
+
+
+  // dateTickFormatting(val: any): string {
+  //   if (val && val.length>10)
+  //     return val.substring(0,4);
+  //   else
+  //     return ""
+  // }
 
 
 

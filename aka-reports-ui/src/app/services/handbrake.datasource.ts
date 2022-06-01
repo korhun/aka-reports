@@ -49,6 +49,10 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
   private typeUnknownCountSubject = new BehaviorSubject<number>(0);
   public typeUnknownCount$ = this.typeUnknownCountSubject.asObservable();
 
+
+  private countSeriesSubject = new BehaviorSubject<any[]>([]);
+  public countSeries$ = this.countSeriesSubject.asObservable();
+
   constructor(private handbrakeService: HandbrakeService) {
 
   }
@@ -75,6 +79,8 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
       this.typeCrmCountSubject.next(res.type_results[0]["value"]);
       this.typeBlkCountSubject.next(res.type_results[1]["value"]);
       this.typeUnknownCountSubject.next(res.type_results[2]["value"]);
+
+      this.countSeriesSubject.next(res.count_series);
     })
 
 

@@ -313,13 +313,31 @@ def search(options):
     current_page_count = 0
     count_fault, count_no_fault = 0, 0
     count_crm, count_blk, count_unknown = 0, 0, 0
+
+    series_fault = {}
+    series_no_fault = {}
+
+    def increment_series(series):
+        if series_name not in series:
+            series[series_name] = {
+                "name": series_name,
+                "scan_date": scan_date_for_sort,
+                "value": 1,
+            }
+        else:
+            series[series_name]["value"] += 1
+
     for handbrake in handbrakes:
         if is_ok():
             res_count += 1
+            scan_date_for_sort = datetime.datetime.fromisoformat(handbrake["scan_date"])
+            series_name = datetime.datetime.strftime(scan_date_for_sort, "%d %B")
             if handbrake["has_fault"]:
                 count_fault += 1
+                increment_series(series_fault)
             else:
                 count_no_fault += 1
+                increment_series(series_no_fault)
             if current_page == page_index:
                 res_handbrakes.append(get_handbrake_info(handbrake, options))
             current_page_count += 1
@@ -335,18 +353,19 @@ def search(options):
                 count_unknown += 1
             else:
                 logging.exception(f"Bad type! {handbrake['type']}")
+
     return {
         "handbrakes": res_handbrakes,
         "count": res_count,
         "fault_results": [
             {
+                "name": "Hatasız",
+                "value": count_no_fault,
+            },
+            {
                 "name": "Hatalı",
                 "value": count_fault,
             },
-            {
-                "name": "Hatasız",
-                "value": count_no_fault,
-            }
         ],
         "type_results": [
             {
@@ -361,6 +380,16 @@ def search(options):
                 "name": "Hatalı Barkod",
                 "value": count_unknown,
             }
+        ],
+        "count_series": [
+            {
+                "name": "Hatasız",
+                "series": [{"name": x["name"], "value": x["value"]} for x in sorted(list(series_no_fault.values()), key=lambda item: item["scan_date"])],
+            },
+            {
+                "name": "Hatalı",
+                "series": [{"name": x["name"], "value": x["value"]} for x in sorted(list(series_fault.values()), key=lambda item: item["scan_date"])],
+            },
         ],
     }
 
