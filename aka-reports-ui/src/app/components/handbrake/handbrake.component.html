@@ -166,14 +166,14 @@
                   </mat-card>
                 </div>
 
-                <ngx-charts-pie-chart [view]="[300, 300]" [scheme]="faultColorScheme"
+                <ngx-charts-pie-chart [view]="[300, 250]" [scheme]="faultColorScheme"
                   [results]="dataSource.faultResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
                   [legendPosition]="legendPosition" [labels]="false" [doughnut]="false" (select)="onSelect($event)"
                   (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
                 </ngx-charts-pie-chart>
 
 
-                <ngx-charts-pie-chart [view]="[300, 300]" [scheme]="typeColorScheme"
+                <ngx-charts-pie-chart [view]="[400, 250]" [scheme]="typeColorScheme"
                   [results]="dataSource.typeResults$ | async" [gradient]="true" [legend]="true" [legendTitle]="''"
                   [legendPosition]="legendPosition" [labels]="false" [doughnut]="false">
                 </ngx-charts-pie-chart>

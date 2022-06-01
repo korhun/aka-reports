@@ -326,11 +326,12 @@ def search(options):
             if current_page_count >= page_size:
                 current_page += 1
                 current_page_count = 0
-            if handbrake["type"] == "crm":
+            handbrake_type = handbrake["type"]
+            if handbrake_type == "crm":
                 count_crm += 1
-            elif handbrake["type"] == "blk":
+            elif handbrake_type == "blk":
                 count_blk += 1
-            elif handbrake["type"] == "unknown":
+            elif handbrake_type == "unknown":
                 count_unknown += 1
             else:
                 logging.exception(f"Bad type! {handbrake['type']}")
@@ -362,8 +363,6 @@ def search(options):
             }
         ],
     }
-
-
 
 #
 # def search(options):
