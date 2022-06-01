@@ -54,8 +54,11 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   // // legendPosition: string = 'below';
   legendPosition: LegendPosition = LegendPosition.Below;
 
-  colorScheme: any = {
+  faultColorScheme: any = {
     domain: ['#e91e63', '#214185']
+  };
+  typeColorScheme: any = {
+    domain: ['#d3d3d3', '#36394b', '#e91e63']
   };
 
   onSelect(data: any): void {
@@ -180,18 +183,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       this.optionsForm.patchValue({ include_fault: true });
     }
   }
-  checkChanged_typeCrm() {
-    const opts: HandbrakeSearchOptions = this.optionsForm.value
-    if (!opts.type_crm && !opts.type_blk) {
-      this.optionsForm.patchValue({ type_blk: true });
-    }
-  }
-  checkChanged_typeBlk() {
-    const opts: HandbrakeSearchOptions = this.optionsForm.value
-    if (!opts.type_crm && !opts.type_blk) {
-      this.optionsForm.patchValue({ type_crm: true });
-    }
-  }
+
 
 
   // barcodeSearchControl = new FormControl();

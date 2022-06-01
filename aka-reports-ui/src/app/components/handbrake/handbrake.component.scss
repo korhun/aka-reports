@@ -1,4 +1,4 @@
-mat-divider {
+.search-mat-divider {
   margin-top: 16px;
   margin-bottom: 16px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -56,7 +56,19 @@ mat-divider {
   // width: calc(100% - 324px);
   // background-color: darkolivegreen;
   // overflow: hidden;
+}
 
+.graphics-right {
+  padding: 1em;
+  height: calc(100vh - 172px) !important;
+  // background-color: darkolivegreen;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
 }
 
 .full-width {
@@ -113,8 +125,9 @@ mat-divider {
   flex: 0 0 110px;
 }
 
-
-::ng-deep .ngx-charts text { fill: var(--color) !important; }
+::ng-deep .ngx-charts text {
+  fill: var(--color) !important;
+}
 
 // .example-header {
 //   position: fixed;

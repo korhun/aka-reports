@@ -14,6 +14,7 @@ export interface HandbrakeSearchResult {
   handbrakes: HandbrakeItem[];
   count: number;
   fault_results: any[];
+  type_results: any[];
 }
 
 export interface HandbrakeSearchOptions {
@@ -23,6 +24,7 @@ export interface HandbrakeSearchOptions {
   include_no_fault: boolean,
   type_crm: boolean,
   type_blk: boolean,
+  type_unknown: boolean,
 
   date_start: any,
   date_end: any,
@@ -45,6 +47,7 @@ export class HandbrakeHelper {
       handbrakes: [],
       count: 0,
       fault_results: [],
+      type_results: [],
     }
   }
 
@@ -56,6 +59,7 @@ export class HandbrakeHelper {
       include_no_fault: true,
       type_crm: true,
       type_blk: true,
+      type_unknown: true,
 
       date_start: null,
       date_end: null,
@@ -80,6 +84,7 @@ export class HandbrakeHelper {
       include_no_fault: options.include_no_fault,
       type_crm: options.type_crm,
       type_blk: options.type_blk,
+      type_unknown: options.type_unknown,
 
       date_start: options.date_start,
       date_end: options.date_end,
@@ -102,6 +107,7 @@ export class HandbrakeHelper {
       !options.include_no_fault ||
       !options.type_crm ||
       !options.type_blk ||
+      !options.type_unknown ||
       options.date_start ? true : false ||
         options.date_end ? true : false ||
           !options.date_shift1 ||

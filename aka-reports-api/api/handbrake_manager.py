@@ -126,7 +126,12 @@ def _create_handbrake(barcode, dir_path):
 
 
 def barcode_type(barcode):
-    return "crm" if string_helper.wildcard(barcode, "*_crm_*", case_insensitive=True) else "blk"
+    # return "crm" if string_helper.wildcard(barcode, "*_crm_*", case_insensitive=True) else "blk"
+    if string_helper.wildcard(barcode, "*_crm_*", case_insensitive=True):
+        return "crm"
+    if string_helper.wildcard(barcode, "*_blk_*", case_insensitive=True):
+        return "blk"
+    return "unknown"
 
 
 def _watch_workspace():
@@ -226,11 +231,13 @@ def search(options):
             if not include_no_fault and not handbrake["has_fault"]:
                 return False
 
-        if not type_crm or not type_blk:
+        if not type_crm or not type_blk or not type_unknown:
             btype = barcode_type(barcode)
             if not type_crm and btype == "crm":
                 return False
             if not type_blk and btype == "blk":
+                return False
+            if not type_unknown and btype == "unknown":
                 return False
 
         if date_start or date_end or not date_shift1 or not date_shift2 or not date_shift3:
@@ -274,6 +281,7 @@ def search(options):
     include_no_fault = options.get("include_no_fault", True)
     type_crm = options.get("type_crm", True)
     type_blk = options.get("type_blk", True)
+    type_unknown = options.get("type_unknown", True)
 
     date_start = options.get("date_start", None)
     date_end = options.get("date_end", None)
@@ -300,13 +308,11 @@ def search(options):
 
     res_handbrakes = []
     res_count = 0
-    res_count_fault = 0
-    res_count_no_fault = 0
 
     current_page = 0
     current_page_count = 0
-    count_fault = 0
-    count_no_fault = 0
+    count_fault, count_no_fault = 0, 0
+    count_crm, count_blk, count_unknown = 0, 0, 0
     for handbrake in handbrakes:
         if is_ok():
             res_count += 1
@@ -320,6 +326,14 @@ def search(options):
             if current_page_count >= page_size:
                 current_page += 1
                 current_page_count = 0
+            if handbrake["type"] == "crm":
+                count_crm += 1
+            elif handbrake["type"] == "blk":
+                count_blk += 1
+            elif handbrake["type"] == "unknown":
+                count_unknown += 1
+            else:
+                logging.exception(f"Bad type! {handbrake['type']}")
     return {
         "handbrakes": res_handbrakes,
         "count": res_count,
@@ -332,7 +346,21 @@ def search(options):
                 "name": "Hatasız",
                 "value": count_no_fault,
             }
-        ]
+        ],
+        "type_results": [
+            {
+                "name": "Krom Düğmeli",
+                "value": count_crm,
+            },
+            {
+                "name": "Siyah Düğmeli",
+                "value": count_blk,
+            },
+            {
+                "name": "Hatalı Barkod",
+                "value": count_unknown,
+            }
+        ],
     }
 
 

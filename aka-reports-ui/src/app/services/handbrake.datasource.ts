@@ -29,6 +29,26 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
   private faultResultsSubject = new BehaviorSubject<any[]>([]);
   public faultResults$ = this.faultResultsSubject.asObservable();
 
+  private faultCountSubject = new BehaviorSubject<number>(0);
+  public faultCount$ = this.faultCountSubject.asObservable();
+
+  private noFaultCountSubject = new BehaviorSubject<number>(0);
+  public noFaultCount$ = this.noFaultCountSubject.asObservable();
+
+
+
+  private typeResultsSubject = new BehaviorSubject<any[]>([]);
+  public typeResults$ = this.typeResultsSubject.asObservable();
+
+  private typeCrmCountSubject = new BehaviorSubject<number>(0);
+  public typeCrmCount$ = this.typeCrmCountSubject.asObservable();
+
+  private typeBlkCountSubject = new BehaviorSubject<number>(0);
+  public typeBlkCount$ = this.typeBlkCountSubject.asObservable();
+
+  private typeUnknownCountSubject = new BehaviorSubject<number>(0);
+  public typeUnknownCount$ = this.typeUnknownCountSubject.asObservable();
+
   constructor(private handbrakeService: HandbrakeService) {
 
   }
@@ -46,7 +66,15 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
       const res = obj as HandbrakeSearchResult;
       this.handbrakesSubject.next(res.handbrakes);
       this.lengthSubject.next(res.count);
+
       this.faultResultsSubject.next(res.fault_results);
+      this.faultCountSubject.next(res.fault_results[0]["value"]);
+      this.noFaultCountSubject.next(res.fault_results[1]["value"]);
+
+      this.typeResultsSubject.next(res.type_results);
+      this.typeCrmCountSubject.next(res.type_results[0]["value"]);
+      this.typeBlkCountSubject.next(res.type_results[1]["value"]);
+      this.typeUnknownCountSubject.next(res.type_results[2]["value"]);
     })
 
 
