@@ -1,7 +1,7 @@
 from tornado.web import Application
 from tornado.ioloop import IOLoop
 
-from api.handbrake_handler import HandbrakeHandler
+from api.handbrakes_handler import HandbrakesHandler
 
 
 def _get_app():
@@ -13,8 +13,8 @@ def _get_app():
         # (r"/wfapi/workflow/([0-9]+)", WorkflowHandler),
         # (r"/wfapi/runner", RunnersHandler)
 
-        # ("/api/searchHandbrakes", HandbrakeHandler),
-        ("/api/handbrake", HandbrakeHandler),
+        # ("/api/searchHandbrakes", HandbrakesHandler),
+        ("/api/handbrake", HandbrakesHandler),
     ]
     return Application(urls, debug=True)
 

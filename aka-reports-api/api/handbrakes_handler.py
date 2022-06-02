@@ -8,7 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class HandbrakeHandler(BaseHandler, ABC):
+class HandbrakesHandler(BaseHandler, ABC):
 
     def get(self):
         """
@@ -52,4 +52,4 @@ class HandbrakeHandler(BaseHandler, ABC):
     #         request: httputil.HTTPServerRequest,
     #         **kwargs: Any
     # ):
-    #     super(HandbrakeHandler, self).__init__(application, request, **kwargs)
+    #     super(HandbrakesHandler, self).__init__(application, request, **kwargs)
