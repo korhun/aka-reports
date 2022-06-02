@@ -42,6 +42,17 @@ export interface HandbrakeSearchOptions {
   page_size: number
 }
 
+export interface HandbrakeDetails {
+  key: number;
+  barcode: string;
+  has_fault: boolean;
+  scan_date: Date;
+  barcode_date: Date;
+  type: string;
+
+}
+
+
 export class HandbrakeHelper {
   public static createDefaultHandbrakeSearchResult(): HandbrakeSearchResult {
     return {
@@ -137,6 +148,10 @@ export class HandbrakeHelper {
       this.validateHandbrake(element)
     })
     return res
+  }
+
+  public static getHandbrakeDetails(obj: object): HandbrakeDetails {
+    return obj as HandbrakeDetails;
   }
 
 }

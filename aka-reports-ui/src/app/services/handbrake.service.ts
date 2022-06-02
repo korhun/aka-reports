@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, of, debounceTime } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
-import { HandbrakeItem, HandbrakeHelper, HandbrakeSearchOptions, HandbrakeSearchResult } from "../models/handbrake-item.model";
+import { HandbrakeItem, HandbrakeHelper, HandbrakeSearchOptions, HandbrakeSearchResult, HandbrakeDetails } from "../models/handbrake-item.model";
 
 @Injectable({
   providedIn: 'root'
@@ -26,4 +26,14 @@ export class HandbrakeService {
       map(items => HandbrakeHelper.getHandbrakeSearchResult(items))
     )
   }
+
+  getHandbrakeDetails(key:string): Observable<HandbrakeDetails>{
+    return this.http.get('/api/handbrake', {
+      params: new HttpParams()
+        .set('key', key)
+    }).pipe(
+      map(item => HandbrakeHelper.getHandbrakeDetails(item))
+    );
+  }
+
 }

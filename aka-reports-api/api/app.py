@@ -1,6 +1,7 @@
 from tornado.web import Application
 from tornado.ioloop import IOLoop
 
+from api.handbrake_handler import HandbrakeHandler
 from api.handbrakes_handler import HandbrakesHandler
 
 
@@ -15,6 +16,7 @@ def _get_app():
 
         # ("/api/searchHandbrakes", HandbrakesHandler),
         ("/api/handbrakes", HandbrakesHandler),
+        ("/api/handbrake", HandbrakeHandler),
     ]
     return Application(urls, debug=True)
 
