@@ -84,7 +84,7 @@ $algo-ui-theme-dark: mat.define-dark-theme(
   @include mat.all-component-themes($algo-ui-theme);
   --color: #000000;
   --background-color: #eaf5ff;
-  --background-contrast-color: #ffffff;
+  --background-contrast-color: #e6e7e7;
   --grid-color: #dee9f2;
 }
 .dark-theme {

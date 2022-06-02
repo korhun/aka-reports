@@ -15,6 +15,7 @@ import { HandbrakeService } from 'src/app/services/handbrake.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { LegendPosition } from '@swimlane/ngx-charts';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-handbrake',
@@ -82,11 +83,12 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
 
   dataSource!: HandbrakeDataSource;
-
   displayedColumns = ["hasFault", "scan_date", "barcode_date", "barcode"];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;
+
+  selection = new SelectionModel<HandbrakeItem>(false, undefined);
 
   // length = 0;
   pageSize = 15;
@@ -118,6 +120,14 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       // switchMap(val=>val),
       tap(() => this.loadHandbrakesPage(true))
     ).subscribe();
+
+    this.selection.changed.subscribe((a) =>
+    {
+        if (a.added[0])   // will be undefined if no selection
+        {
+            alert('You selected ' + a.added[0].key);
+        }
+    });
   }
 
 
@@ -187,6 +197,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       this.optionsForm.patchValue({ include_fault: true });
     }
   }
+
 
 
   // dateTickFormatting(val: any): string {

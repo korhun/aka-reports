@@ -71,7 +71,7 @@
   align-items: flex-start;
 }
 
-.graphics-row{
+.graphics-row {
   display: flex;
   flex-direction: row;
   padding: 2em;
@@ -144,11 +144,11 @@
   font-size: 1px;
   height: 10px !important;
 }
-.info-cards{
+.info-cards {
   padding-right: 3.5em;
   // width: 14em;
 }
-ngx-charts-pie-chart{
+ngx-charts-pie-chart {
   margin-left: 20px;
   margin-right: -10px;
 }
@@ -157,91 +157,24 @@ ngx-charts-pie-chart{
   stroke: var(--grid-color) !important;
 }
 
-::ng-deep .chart-legend .legend-label .active .legend-label-text{
+::ng-deep .chart-legend .legend-label .active .legend-label-text {
   color: var(--color) !important;
 }
 
-// .example-header {
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-// }
-
-// .example-footer {
-//   position: fixed;
-//   bottom: 0;
-//   left: 0;
-//   right: 0;
-// }
-
-// // mat-toolbar {
-// //   background: #004a9f;
-// //   color: white;
-// // }
-
-// mat-sidenav {
-//   margin: 1em;
-//   width: 200px;
-//   border-right: none;
-//   // background: #002b5c;
-//   // color: white;
-//   border-radius: 10px;
-//   padding: 16px;
-//   text-align: center;
-// }
-
-// mat-sidenav-content {
-
-//   margin: 1em;
-//   width: 200px;
-//   border-right: none;
-//   background: #002b5c;
-//   // color: white;
-//   border-radius: 10px;
-//   padding: 16px;
-//   text-align: center;
-
-//   // height: calc(100vh - 130px);
-//   // border-radius: 10px;
-//   // margin: 16px;
-//   // margin-left: 32px;
-
-//   // padding: 16px;
-
-//   // overflow: auto;
-// }
-
-// mat-sidenav-container {
-//   height: calc(100vh - 65px);
-// }
-
-// .menu-button {
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-start;
-//   font-size: 1rem;
-
-//   mat-icon {
-//     margin-right: 8px;
+// .mat-row {
+//   &.selected {
+//     background-color: var(--background-contrast-color);
 //   }
 // }
 
-// .avatar {
-//   margin-top: 16px;
-//   width: 100px;
-//   height: 100px;
-//   border-radius: 50%;
-// }
+.mat-row:hover {
+  background-color: var(--background-contrast-color);
+}
 
-// .name {
-//   margin-top: 8px;
-//   font-weight: normal;
-// }
 
-// .designation {
-//   margin-top: 2px;
-//   font-size: 0.7rem;
-//   color: lightgrey;
+// .mat-cell:hover {
+//   background-color: var(--background-contrast-color);
 // }
+.mat-cell:first-child:hover {
+  cursor: pointer;
+}

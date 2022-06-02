@@ -111,9 +111,13 @@
                 <mat-table class="handbrakes-table mat-elevation-z8" [dataSource]="dataSource" matSort
                   matSortActive="scan_date" matSortDirection="asc" matSortDisableClear>
 
-                  <ng-container matColumnDef="hasFault">
+                  <ng-container matColumnDef="hasFault" class="handbrake-cell-img">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <mat-cell *matCellDef="let handbrake"><img [src]="handbrake.imgSrc" class="table-type-image" />
+                    <!-- <mat-cell *matCellDef="let handbrake" (click)="selection.select(handbrake)">
+                      <img [src]="handbrake.imgSrc" class="table-type-image" />
+                    </mat-cell> -->
+                    <mat-cell *matCellDef="let handbrake" (click)="selection.select(handbrake)">
+                      <img [src]="handbrake.imgSrc" class="table-type-image" />
                     </mat-cell>
                   </ng-container>
 
@@ -132,8 +136,13 @@
                     <mat-cell class="description-cell" *matCellDef="let handbrake">{{handbrake.barcode}}</mat-cell>
                   </ng-container>
 
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+
                   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                  <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="{ 'selected': selection.isSelected(row)}" (click)="selection.select(row)"></mat-row> -->
+
+
                 </mat-table>
 
                 <mat-paginator class="mat-elevation-z8" [length]="dataSource.length$ | async" [pageSize]="pageSize"
@@ -183,9 +192,9 @@
 
                 <div class="graphics-row">
                   <ngx-charts-area-chart-stacked [view]="[1000, 300]" [scheme]="countSeriesColorScheme" [legend]="true"
-                    [legendTitle]="''" [legendPosition]="graphLegendPosition" [showXAxisLabel]="true" [showYAxisLabel]="true"
-                    [xAxis]="true" [yAxis]="true" [showXAxisLabel]="false" [yAxisLabel]="'Elcik Sayısı'" [timeline]="true"
-                    [gradient] = "true"
+                    [legendTitle]="''" [legendPosition]="graphLegendPosition" [showXAxisLabel]="true"
+                    [showYAxisLabel]="true" [xAxis]="true" [yAxis]="true" [showXAxisLabel]="false"
+                    [yAxisLabel]="'Elcik Sayısı'" [timeline]="true" [gradient]="true"
                     [results]="dataSource.countSeries$ | async" (select)="onSelect($event)">
                   </ngx-charts-area-chart-stacked>
                 </div>

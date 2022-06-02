@@ -23,6 +23,7 @@ import localeTr from '@angular/common/locales/tr';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { HandbrakeDetailsComponent } from './components/handbrake-details/handbrake-details.component';
 
 registerLocaleData(localeTr);
 
@@ -32,6 +33,7 @@ registerLocaleData(localeTr);
     NavbarComponent,
     HandbrakeComponent,
     HandbrakeItemComponent,
+    HandbrakeDetailsComponent,
   ],
   imports: [
     BrowserModule,
