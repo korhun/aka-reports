@@ -15,7 +15,7 @@ export class HandbrakeService {
 
 
   private _findHandbrakes(options: HandbrakeSearchOptions): Observable<any> {
-    return this.http.get('/api/handbrake', {
+    return this.http.get('/api/handbrakes', {
       params: new HttpParams()
         .set('options', JSON.stringify(options))
     });

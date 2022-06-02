@@ -14,7 +14,7 @@ def _get_app():
         # (r"/wfapi/runner", RunnersHandler)
 
         # ("/api/searchHandbrakes", HandbrakesHandler),
-        ("/api/handbrake", HandbrakesHandler),
+        ("/api/handbrakes", HandbrakesHandler),
     ]
     return Application(urls, debug=True)
 
