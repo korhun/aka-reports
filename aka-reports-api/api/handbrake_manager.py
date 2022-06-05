@@ -10,7 +10,7 @@ import dateutil.parser
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-from utils import file_helper, string_helper
+from utils import file_helper, string_helper, image_helper, preview_helper
 from utils.label_file import LabelFile
 
 from dateutil.tz import UTC
@@ -45,8 +45,8 @@ def _label_has_fault(label_fn):
     return False
 
 
-def _create_key(barcode, dir_path):
-    return hash(f"{barcode}:{dir_path}".encode("utf-8"))
+def _create_key(barcode, dir_path) -> str:
+    return str(hash(f"{barcode}:{dir_path}".encode("utf-8")))
 
 
 def _get_datetime_from_barcode(barcode):
@@ -68,7 +68,7 @@ def _create_handbrake(barcode, dir_path):
     """
     :return: None or
     {
-        "key": int,
+        "key": string,
         "barcode": string,
         "has_fault": boolean,
         "scan_date": iso format datetime
@@ -209,8 +209,6 @@ def get_handbrake_info(handbrake, options):
         "has_fault": handbrake["has_fault"],
         "type": handbrake["type"],
     }
-    if options and "include_thumbs" in options:
-        raise NotImplementedError()
     return res
 
 
@@ -395,4 +393,19 @@ def search(options):
 
 
 def get_handbrake(key):
-    return _key_to_handbrake["key"]
+    return _key_to_handbrake[key]
+
+
+def get_handbrake_details(key):
+    handbrake = get_handbrake(key)
+    res = {
+        "key": handbrake["key"],
+        "barcode": handbrake["barcode"],
+        "scan_date": handbrake["scan_date"],
+        "barcode_date": handbrake["barcode_date"],
+        "has_fault": handbrake["has_fault"],
+        "type": handbrake["type"],
+        "cams": preview_helper.get_preview(handbrake),
+    }
+    return res
+

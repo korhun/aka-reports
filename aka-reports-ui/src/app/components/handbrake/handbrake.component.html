@@ -153,10 +153,16 @@
             </mat-tab>
 
             <mat-tab label="Grafikler">
-              <div class="graphics-right">
-
+              <div class="graphics-right graphics-row" *ngIf="!(dataSource.length$ | async)">
+                <mat-card>
+                  <mat-card-header>
+                    <mat-card-title>Elcik bulunamadı!</mat-card-title>
+                    <mat-card-subtitle></mat-card-subtitle>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+              <div class="graphics-right" *ngIf="(dataSource.length$ | async)">
                 <div class="graphics-row">
-
                   <div class="info-cards">
                     <mat-card>
                       <mat-card-header>

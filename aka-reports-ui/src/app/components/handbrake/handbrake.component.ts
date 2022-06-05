@@ -16,6 +16,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
+import { HandbrakeDetailsComponent } from '../handbrake-details/handbrake-details.component';
 
 @Component({
   selector: 'app-handbrake',
@@ -79,9 +81,6 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   }
 
 
-
-
-
   dataSource!: HandbrakeDataSource;
   displayedColumns = ["hasFault", "scan_date", "barcode_date", "barcode"];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -107,7 +106,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     const opts: HandbrakeSearchOptions = this.optionsForm.value;
     return !HandbrakeHelper.filterExists(opts)
   }
-  constructor(fb: FormBuilder, private handbrakeService: HandbrakeService, private cdr: ChangeDetectorRef) {
+  constructor(fb: FormBuilder, private handbrakeService: HandbrakeService, private cdr: ChangeDetectorRef, private dialog: MatDialog) {
     this.optionsForm = fb.group(HandbrakeHelper.createDefaultOptions());
   }
 
@@ -123,9 +122,9 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
     this.selection.changed.subscribe((a) =>
     {
-        if (a.added[0])   // will be undefined if no selection
+        if (a.added[0])
         {
-            alert('You selected ' + a.added[0].key);
+            this.openDialog(a.added[0])
         }
     });
   }
@@ -198,7 +197,16 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     }
   }
 
+  openDialog(handbrake: HandbrakeItem) {
+    // alert(JSON.stringify(handbrake));
+    const dialogRef = this.dialog.open(HandbrakeDetailsComponent);
+    let instance:HandbrakeDetailsComponent = dialogRef.componentInstance;
+    instance.load(handbrake)
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
   // dateTickFormatting(val: any): string {
   //   if (val && val.length>10)

@@ -17,7 +17,7 @@ class HandbrakeHandler(BaseHandler, ABC):
             return
 
         key = self.get_argument('key', None)
-        handbrake = handbrake_manager.get_handbrake(key)
+        handbrake_details = handbrake_manager.get_handbrake_details(key)
 
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(handbrake))
+        self.write(json.dumps(handbrake_details))

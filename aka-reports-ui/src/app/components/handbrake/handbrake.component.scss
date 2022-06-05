@@ -40,29 +40,16 @@
 }
 .handbrakes-table {
   overflow: auto;
-  // height: calc(100% - 2em);
   height: calc(100% - 50px);
 }
 .search-right {
-  // padding: 1em;
-  // height: calc(100% - 4em);
-
-  // position: fixed;
   padding: 1em;
-
-  // height: calc(100% - 14em);
-  // width: calc(100% - 23em);
   height: calc(100vh - 172px) !important;
-  // width: calc(100% - 324px);
-  // background-color: darkolivegreen;
-  // overflow: hidden;
 }
 
 .graphics-right {
   padding: 1em;
   height: calc(100vh - 172px) !important;
-  // background-color: darkolivegreen;
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -91,10 +78,6 @@
   width: 100%;
   height: 0px;
   text-align: center;
-  // left: 0%;
-  // top: 0%;
-  // margin-left: -300px; /*half the width*/
-  // margin-top: -1em;
 }
 
 .spinner-container mat-spinner {
@@ -146,7 +129,7 @@
 }
 .info-cards {
   padding-right: 3.5em;
-  // width: 14em;
+  min-width: 216px;
 }
 ngx-charts-pie-chart {
   margin-left: 20px;
@@ -170,7 +153,6 @@ ngx-charts-pie-chart {
 .mat-row:hover {
   background-color: var(--background-contrast-color);
 }
-
 
 // .mat-cell:hover {
 //   background-color: var(--background-contrast-color);

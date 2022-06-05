@@ -1,7 +1,7 @@
 import { NONE_TYPE } from "@angular/compiler";
 
 export interface HandbrakeItem {
-  key: number;
+  key: string;
   barcode: string;
   has_fault: boolean;
   scan_date: Date;
@@ -43,13 +43,16 @@ export interface HandbrakeSearchOptions {
 }
 
 export interface HandbrakeDetails {
-  key: number;
+  key: string;
   barcode: string;
   has_fault: boolean;
-  scan_date: Date;
-  barcode_date: Date;
+  scan_date?: any,
+  barcode_date?: any,
   type: string;
-
+  cams: Array<CamDetails>;
+}
+export interface CamDetails{
+  preview: string;
 }
 
 
@@ -61,6 +64,18 @@ export class HandbrakeHelper {
       fault_results: [],
       type_results: [],
       count_series: [],
+    }
+  }
+
+  public static createDefaultHandbrakeDetails(): HandbrakeDetails {
+    return {
+      key: "",
+      barcode: "",
+      has_fault: false,
+      scan_date: null,
+      barcode_date: null,
+      type: "",
+      cams: []
     }
   }
 

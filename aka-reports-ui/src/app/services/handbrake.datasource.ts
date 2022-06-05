@@ -16,16 +16,6 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
   private lengthSubject = new BehaviorSubject<number>(0);
   public length$ = this.lengthSubject.asObservable();
 
-  // private faultResultsSubject = new BehaviorSubject<any[]>([
-  //   {
-  //     "name": "Germany",
-  //     "value": 8940000
-  //   },
-  //   {
-  //     "name": "USA",
-  //     "value": 5000000
-  //   },
-  // ]);
   private faultResultsSubject = new BehaviorSubject<any[]>([]);
   public faultResults$ = this.faultResultsSubject.asObservable();
 
@@ -82,20 +72,6 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
 
       this.countSeriesSubject.next(res.count_series);
     })
-
-
-
-    // this.loadingSubject.next(true);
-    // if (this.subs)
-    //   this.subs.unsubscribe();
-    // this.subs = this.handbrakeService.findHandbrakes(options).pipe(
-    //   catchError(() => of([])),
-    //   finalize(() => this.loadingSubject.next(false))
-    // ).subscribe(handbrakes => this.handbrakesSubject.next(handbrakes));
-
-    // this.handbrakeService.findHandbrakesCount(options).pipe(
-    //   catchError(() => of([])),
-    // ).subscribe(count => this.lengthSubject.next(+count));
   }
 
   connect(collectionViewer: CollectionViewer): Observable<HandbrakeItem[]> {
