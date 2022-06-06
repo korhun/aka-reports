@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
   title = 'Orientis QAP';
 
-  constructor(private elem: ElementRef, private cdr: ChangeDetectorRef) {
+  constructor(private elem: ElementRef, private cdr: ChangeDetectorRef, private _overlayContainer: OverlayContainer) {
     console.log("PROD: " + environment.production);
     this.init("title")
   }
@@ -18,7 +19,7 @@ export class AppComponent {
   }
 
 
-  private static readonly DARK_KEY:string = "algo_dark_theme";
+  private static readonly DARK_KEY: string = "algo_dark_theme";
   private _isDark: boolean = false;
   @Output()
   get isDarkTheme(): boolean {
@@ -32,6 +33,18 @@ export class AppComponent {
     if (save) {
       this.isDarkLocal = value;
     }
+
+    // remove old theme class and add new theme class
+    const theme = this._isDark ? "dark-theme" : "light-theme"
+    console.log(theme)
+    const overlayContainerClasses = this._overlayContainer.getContainerElement().classList;
+    const themeClassesToRemove = Array.from(overlayContainerClasses)
+      .filter((item: string) => item.includes('-theme'));
+    if (themeClassesToRemove.length) {
+      overlayContainerClasses.remove(...themeClassesToRemove);
+    }
+    overlayContainerClasses.add(theme);
+
   }
   get isDarkLocal(): boolean {
     let val: any = localStorage.getItem(AppComponent.DARK_KEY);
