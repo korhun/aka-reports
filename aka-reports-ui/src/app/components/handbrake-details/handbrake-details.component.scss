@@ -1,3 +1,56 @@
-.cam-img{
-  max-width: 200px;
+.close-button {
+  float: right;
+  top: -24px;
+  right: -24px;
+  background-color: transparent !important;
+}
+
+.close-icon {
+  transition: 1s ease-in-out;
+  background-color: transparent !important;
+}
+
+// .details-container {
+//   max-height: calc(100vh - 125px) !important;
+//   text-align: center;
+
+//   background-color: cadetblue;
+// }
+
+.grid-container {
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 70px;
+  bottom: 15px;
+}
+.grid {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  padding-bottom: 0px !important;
+  overflow: auto;
+  align-content: center;
+  align-items: center;
+}
+
+.grid-cell {
+  width: 45%;
+  border-radius: 10px !important;
+}
+
+.cam-img {
+  border-radius: 10px !important;
+
+  max-height: 100% !important;
+  min-height: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+
 }

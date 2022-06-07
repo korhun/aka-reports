@@ -205,6 +205,15 @@
                   </ngx-charts-area-chart-stacked>
                 </div>
 
+                <div class="graphics-row">
+                  <ngx-charts-area-chart-stacked [view]="[1000, 300]" [scheme]="shiftSeriesColorScheme" [legend]="true"
+                    [legendTitle]="''" [legendPosition]="graphLegendPosition" [showXAxisLabel]="true"
+                    [showYAxisLabel]="true" [xAxis]="true" [yAxis]="true" [showXAxisLabel]="false"
+                    [yAxisLabel]="'Elcik Sayısı'" [timeline]="true" [gradient]="true"
+                    [results]="dataSource.shiftSeries$ | async" (select)="onSelect($event)">
+                  </ngx-charts-area-chart-stacked>
+                </div>
+
               </div>
 
             </mat-tab>

@@ -67,6 +67,9 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   countSeriesColorScheme: any = {
     domain: ['#214185', '#e91e63']
   };
+  shiftSeriesColorScheme: any = {
+    domain: ['#949b00', '#0b80df', '#018f24']
+  };
 
   onSelect(data: any): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
@@ -120,13 +123,17 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       tap(() => this.loadHandbrakesPage(true))
     ).subscribe();
 
-    this.selection.changed.subscribe((a) =>
-    {
-        if (a.added[0])
-        {
-            this.openDialog(a.added[0])
-        }
+    this.selection.changed.subscribe((a) => {
+      if (a.added[0]) {
+        this.openDialog(a.added[0])
+      }
     });
+
+    // //****************todo sil */
+    // this.dataSource.handbrakes$.subscribe((handbrakes) => {
+    //   if (handbrakes && handbrakes.length>0)
+    //     this.openDialog(handbrakes[0]);
+    // })
   }
 
 
@@ -199,8 +206,14 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
   openDialog(handbrake: HandbrakeItem) {
     // alert(JSON.stringify(handbrake));
-    const dialogRef = this.dialog.open(HandbrakeDetailsComponent);
-    let instance:HandbrakeDetailsComponent = dialogRef.componentInstance;
+    const dialogRef = this.dialog.open(HandbrakeDetailsComponent, {
+      width: 'calc(100vw - 2em)',
+      maxWidth: 'calc(100vw - 2em)',
+      height: 'calc(100vh - 2em)',
+      maxHeight: 'calc(100vh - 2em)',
+
+    });
+    let instance: HandbrakeDetailsComponent = dialogRef.componentInstance;
     instance.load(handbrake)
 
     dialogRef.afterClosed().subscribe(result => {

@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize } from "rxjs/operators";
 import { CamDetails, HandbrakeDetails, HandbrakeHelper, HandbrakeItem } from 'src/app/models/handbrake-item.model';
 import { HandbrakeService } from 'src/app/services/handbrake.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-handbrake-details',
@@ -12,14 +13,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class HandbrakeDetailsComponent implements OnInit {
 
-  // @Input() handbrakeItem!: HandbrakeItem
-
-  constructor(private handbrakeService: HandbrakeService, private sanitizer: DomSanitizer) { }
+  constructor(private handbrakeService: HandbrakeService, private sanitizer: DomSanitizer, @Inject(DOCUMENT) private document: any) { }
 
   ngOnInit(): void {
   }
 
-  // handbrakeItem!: HandbrakeItem
+  handbrakeItem!: HandbrakeItem
   // handbrakeDetails!: HandbrakeDetails
   // private handbrakeDetailsSubject = new BehaviorSubject<HandbrakeDetails>(HandbrakeHelper.createDefaultHandbrakeDetails());
   // public handbrakeDetails$ = this.handbrakeDetailsSubject.asObservable();
@@ -36,7 +35,7 @@ export class HandbrakeDetailsComponent implements OnInit {
   public loading$ = this.loadingSubject.asObservable();
 
   load(handbrakeItem: HandbrakeItem) {
-    // this.handbrakeItem = handbrakeItem
+    this.handbrakeItem = handbrakeItem
 
     this.loadingSubject.next(true);
     if (this.subs)
@@ -48,39 +47,46 @@ export class HandbrakeDetailsComponent implements OnInit {
     )
       .subscribe(obj => {
         const details = obj as HandbrakeDetails
-        // this.handbrakeDetailsSubject.next(details)
-        // this.camsSubject.next(details.cams)
-
         const imagePaths: Array<any> = [];
         for (let key in details.cams) {
           const base64Txt: string = details.cams[key].preview;
-          // const imgPath = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + base64Txt);
-          const imgPath = base64Txt;
-          console.log(imgPath)
-          imagePaths.push(imgPath);
-        }
+          imagePaths.push(base64Txt);        }
 
         this.imgPathsSubject.next(imagePaths);
-
-        // this.handbrakeDetails = obj as HandbrakeDetails;
-
-        // const res = obj as HandbrakeSearchResult;
-        // this.handbrakesSubject.next(res.handbrakes);
-        // this.lengthSubject.next(res.count);
-
-        // this.faultResultsSubject.next(res.fault_results);
-        // this.faultCountSubject.next(res.fault_results[0]["value"]);
-        // this.noFaultCountSubject.next(res.fault_results[1]["value"]);
-
-        // this.typeResultsSubject.next(res.type_results);
-        // this.typeCrmCountSubject.next(res.type_results[0]["value"]);
-        // this.typeBlkCountSubject.next(res.type_results[1]["value"]);
-        // this.typeUnknownCountSubject.next(res.type_results[2]["value"]);
-
-        // this.countSeriesSubject.next(res.count_series);
       })
-
-
   }
 
+
+  openFullscreen(event:any) {
+    var target = event.target || event.srcElement || event.currentTarget;
+
+    if (target.requestFullscreen) {
+      target.requestFullscreen();
+    } else if (target.mozRequestFullScreen) {
+      /* Firefox */
+      target.mozRequestFullScreen();
+    } else if (target.webkitRequestFullscreen) {
+      /* Chrome, Safari and Opera */
+      target.webkitRequestFullscreen();
+    } else if (target.msRequestFullscreen) {
+      /* IE/Edge */
+      target.msRequestFullscreen();
+    }
+  }
+
+  /* Close fullscreen */
+  closeFullscreen() {
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+    } else if (this.document.mozCancelFullScreen) {
+      /* Firefox */
+      this.document.mozCancelFullScreen();
+    } else if (this.document.webkitExitFullscreen) {
+      /* Chrome, Safari and Opera */
+      this.document.webkitExitFullscreen();
+    } else if (this.document.msExitFullscreen) {
+      /* IE/Edge */
+      this.document.msExitFullscreen();
+    }
+  }
 }

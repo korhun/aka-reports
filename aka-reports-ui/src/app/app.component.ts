@@ -34,9 +34,8 @@ export class AppComponent {
       this.isDarkLocal = value;
     }
 
-    // remove old theme class and add new theme class
+    // https://stackoverflow.com/a/48431919/1266873
     const theme = this._isDark ? "dark-theme" : "light-theme"
-    console.log(theme)
     const overlayContainerClasses = this._overlayContainer.getContainerElement().classList;
     const themeClassesToRemove = Array.from(overlayContainerClasses)
       .filter((item: string) => item.includes('-theme'));

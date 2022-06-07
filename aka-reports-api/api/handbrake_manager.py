@@ -315,6 +315,10 @@ def search(options):
     series_fault = {}
     series_no_fault = {}
 
+    series_shift1 = {}
+    series_shift2 = {}
+    series_shift3 = {}
+
     def increment_series(series):
         if series_name not in series:
             series[series_name] = {
@@ -330,6 +334,15 @@ def search(options):
             res_count += 1
             scan_date_for_sort = datetime.datetime.fromisoformat(handbrake["scan_date"])
             series_name = datetime.datetime.strftime(scan_date_for_sort, "%d %B")
+
+            hour = scan_date_for_sort.astimezone().hour
+            if 8 < hour < 16:
+                increment_series(series_shift1)
+            elif 16 < hour:
+                increment_series(series_shift2)
+            else:
+                increment_series(series_shift3)
+
             if handbrake["has_fault"]:
                 count_fault += 1
                 increment_series(series_fault)
@@ -387,6 +400,20 @@ def search(options):
             {
                 "name": "Hatalı",
                 "series": [{"name": x["name"], "value": x["value"]} for x in sorted(list(series_fault.values()), key=lambda item: item["scan_date"])],
+            },
+        ],
+        "shift_series": [
+            {
+                "name": "1. Vardiya",
+                "series": [{"name": x["name"], "value": x["value"]} for x in sorted(list(series_shift1.values()), key=lambda item: item["scan_date"])],
+            },
+            {
+                "name": "2. Vardiya",
+                "series": [{"name": x["name"], "value": x["value"]} for x in sorted(list(series_shift2.values()), key=lambda item: item["scan_date"])],
+            },
+            {
+                "name": "3. Vardiya",
+                "series": [{"name": x["name"], "value": x["value"]} for x in sorted(list(series_shift3.values()), key=lambda item: item["scan_date"])],
             },
         ],
     }

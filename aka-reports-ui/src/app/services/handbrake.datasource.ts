@@ -9,6 +9,7 @@ import { HandbrakeService } from "./handbrake.service";
 export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
 
   private handbrakesSubject = new BehaviorSubject<HandbrakeItem[]>([]);
+  public handbrakes$ = this.handbrakesSubject.asObservable();
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
@@ -43,6 +44,9 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
   private countSeriesSubject = new BehaviorSubject<any[]>([]);
   public countSeries$ = this.countSeriesSubject.asObservable();
 
+  private shiftSeriesSubject = new BehaviorSubject<any[]>([]);
+  public shiftSeries$ = this.shiftSeriesSubject.asObservable();
+
   constructor(private handbrakeService: HandbrakeService) {
 
   }
@@ -71,6 +75,7 @@ export class HandbrakeDataSource implements DataSource<HandbrakeItem> {
       this.typeUnknownCountSubject.next(res.type_results[2]["value"]);
 
       this.countSeriesSubject.next(res.count_series);
+      this.shiftSeriesSubject.next(res.shift_series);
     })
   }
 
