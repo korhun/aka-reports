@@ -120,10 +120,10 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       tap(() => this.loadHandbrakesPage(true))
     ).subscribe();
 
-    this.dataSource.handbrakes$.subscribe((handbrakes) => {
-      if (handbrakes && handbrakes.length>0)
-        this.openDialog(handbrakes[0]);
-    })
+    // this.dataSource.handbrakes$.subscribe((handbrakes) => {
+    //   if (handbrakes && handbrakes.length>0)
+    //     this.openDialog(handbrakes[0]);
+    // })
   }
 
   ngAfterViewInit() {
