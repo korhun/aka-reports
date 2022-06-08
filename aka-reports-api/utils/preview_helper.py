@@ -36,7 +36,7 @@ def _draw_shapes(frame, shapes):
         for shape in shapes:
             rect = shape["points"]
             class_name = shape["label"]
-            text_size = cv2.getTextSize(class_name, font, 1, 2)[0]
+            text_size = cv2.getTextSize(class_name, font, font_scale, txt_thickness)[0]
             rgb = _get_rgb_by_label(class_name)
             col = [rgb[2], rgb[1], rgb[0]]
             c1, c2 = [int(rect[1][0]), int(rect[1][1])], [int(rect[0][0]), int(rect[0][1])]

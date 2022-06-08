@@ -114,34 +114,20 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.dataSource = new HandbrakeDataSource(this.handbrakeService);
-    // this.optionsForm.valueChanges.subscribe(value => this.loadHandbrakesPage());
     this.optionsForm.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      // switchMap(val=>val),
       tap(() => this.loadHandbrakesPage(true))
     ).subscribe();
 
-    // this.dataSource.handbrakes$.subscribe((handbrakes) => {
-    //   if (handbrakes && handbrakes.length>0)
-    //     this.openDialog(handbrakes[0]);
-    // })
+    this.dataSource.handbrakes$.subscribe((handbrakes) => {
+      if (handbrakes && handbrakes.length>0)
+        this.openDialog(handbrakes[0]);
+    })
   }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    // fromEvent(this.input.nativeElement, 'keyup')
-    //   .pipe(
-    //     debounceTime(150),
-    //     distinctUntilChanged(),
-    //     tap(() => {
-    //       this.paginator.pageIndex = 0;
-    //       this.loadHandbrakesPage();
-    //     })
-    //   )
-    //   .subscribe();
-
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         debounceTime(150),
@@ -199,7 +185,6 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     this.openDialog(handbrake);
   }
   openDialog(handbrake: HandbrakeItem) {
-    console.log("aaaaaaaaaaa")
     const dialogRef = this.dialog.open(HandbrakeDetailsComponent, {
       width: 'calc(100vw - 2em)',
       maxWidth: 'calc(100vw - 2em)',

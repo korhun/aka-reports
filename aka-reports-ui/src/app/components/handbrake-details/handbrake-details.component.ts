@@ -59,6 +59,7 @@ export class HandbrakeDetailsComponent implements OnInit {
 
   openFullscreen(event:any) {
     var target = event.target || event.srcElement || event.currentTarget;
+    target = target.previousSibling;
 
     if (target.requestFullscreen) {
       target.requestFullscreen();
