@@ -5,7 +5,7 @@
   <mat-icon class="close-icon" color="warn">close</mat-icon>
 </button>
 
-<h2 mat-dialog-title>{{handbrakeItem.barcode}}</h2>
+<h2 mat-dialog-title><img [src]="handbrakeItem.imgSrc" class="table-type-image" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{handbrakeItem.barcode}}</h2>
 <div mat-dialog-content class="details-container" *ngIf="(imgPaths$ | async) as imgPaths">
 
 

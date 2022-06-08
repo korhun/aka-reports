@@ -90,7 +90,6 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;
 
-  selection = new SelectionModel<HandbrakeItem>(false, undefined);
 
   // length = 0;
   pageSize = 15;
@@ -123,19 +122,11 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       tap(() => this.loadHandbrakesPage(true))
     ).subscribe();
 
-    this.selection.changed.subscribe((a) => {
-      if (a.added[0]) {
-        this.openDialog(a.added[0])
-      }
-    });
-
-    // //****************todo sil */
     // this.dataSource.handbrakes$.subscribe((handbrakes) => {
     //   if (handbrakes && handbrakes.length>0)
     //     this.openDialog(handbrakes[0]);
     // })
   }
-
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -204,14 +195,16 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onIconClicked(handbrake: HandbrakeItem) {
+    this.openDialog(handbrake);
+  }
   openDialog(handbrake: HandbrakeItem) {
-    // alert(JSON.stringify(handbrake));
+    console.log("aaaaaaaaaaa")
     const dialogRef = this.dialog.open(HandbrakeDetailsComponent, {
       width: 'calc(100vw - 2em)',
       maxWidth: 'calc(100vw - 2em)',
       height: 'calc(100vh - 2em)',
       maxHeight: 'calc(100vh - 2em)',
-
     });
     let instance: HandbrakeDetailsComponent = dialogRef.componentInstance;
     instance.load(handbrake)
@@ -220,103 +213,6 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-
-  // dateTickFormatting(val: any): string {
-  //   if (val && val.length>10)
-  //     return val.substring(0,4);
-  //   else
-  //     return ""
-  // }
-
-
-
-  // barcodeSearchControl = new FormControl();
-  // autoCompleteList: Observable<string[]> = of([]);
-  // handbrakeItems: Observable<HandbrakeItem[]> = of([]);
-
-
-
-  // @ViewChild(MatSidenav)
-  // sidenav!: MatSidenav;
-
-  // public get searchExists(): boolean {
-  //   return this.barcodeSearchControl.value != null && this.barcodeSearchControl.value != ''
-  // }
-
-  // private _updateAutoCompleteList(value: string): void {
-  //   this.loadHandbrakesPage()
-  //   // this.akaReporterService.searchBarcodes(value).subscribe({
-  //   //   next: (response) => {
-  //   //     this.autoCompleteList = of(response);
-  //   //   },
-  //   //   error: (err) => {
-  //   //     console.log('HandbrakeComponent._updateAutoCompleteList error: ' + err.message);
-  //   //   }
-  //   // });
-  // }
-  // public search(value: string): void {
-  //   this.loadHandbrakesPage()
-  //   // this.akaReporterService.searchHandbrakes(value).subscribe({
-  //   //   next: (response) => {
-  //   //     this.handbrakeItems = of(this.sort(response));
-  //   //   },
-  //   //   error: (err) => {
-  //   //     console.log('HandbrakeComponent._search error: ' + err.message);
-  //   //   }
-  //   // });
-  //   // return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  // }
-
-  // public applySearch() {
-  //   this.search(this.barcodeSearchControl.value)
-  // }
-
-  // public clearSearch() {
-  //   this.barcodeSearchControl.setValue("")
-  //   this.applySearch()
-  // }
-
-
-  // ngAfterViewInit() {
-  //   this.observer
-  //     .observe(['(max-width: 800px)'])
-  //     // .pipe(delay(1), untilDestroyed(this))
-  //     .subscribe((res) => {
-  //       if (res.matches) {
-  //         this.sidenav.mode = 'over';
-  //         this.sidenav.close();
-  //       } else {
-  //         this.sidenav.mode = 'side';
-  //         this.sidenav.open();
-  //       }
-  //     });
-
-  //   this.router.events
-  //     // .pipe(
-  //     //   untilDestroyed(this),
-  //     //   filter((e) => e instanceof NavigationEnd)
-  //     // )
-  //     .subscribe(() => {
-  //       if (this.sidenav.mode === 'over') {
-  //         this.sidenav.close();
-  //       }
-  //     });
-  // }
 }
 
 
-
-
-
-
-
-
-
-
-// ***** sil
-  // private sort(arr: HandbrakeItem[]) {
-  //   if (arr)
-  //     return arr.sort((a, b) => (new Date(b.time)).getTime() - (new Date(a.time)).getTime());
-  //   else
-  //     return arr;
-  // }

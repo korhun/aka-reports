@@ -113,10 +113,7 @@
 
                   <ng-container matColumnDef="hasFault" class="handbrake-cell-img">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                    <!-- <mat-cell *matCellDef="let handbrake" (click)="selection.select(handbrake)">
-                      <img [src]="handbrake.imgSrc" class="table-type-image" />
-                    </mat-cell> -->
-                    <mat-cell *matCellDef="let handbrake" (click)="selection.select(handbrake)">
+                    <mat-cell *matCellDef="let handbrake" (click)="onIconClicked(handbrake)">
                       <img [src]="handbrake.imgSrc" class="table-type-image" />
                     </mat-cell>
                   </ng-container>
@@ -206,12 +203,12 @@
                 </div>
 
                 <div class="graphics-row">
-                  <ngx-charts-area-chart-stacked [view]="[1000, 300]" [scheme]="shiftSeriesColorScheme" [legend]="true"
+                  <ngx-charts-area-chart [view]="[1000, 300]" [scheme]="shiftSeriesColorScheme" [legend]="true"
                     [legendTitle]="''" [legendPosition]="graphLegendPosition" [showXAxisLabel]="true"
                     [showYAxisLabel]="true" [xAxis]="true" [yAxis]="true" [showXAxisLabel]="false"
                     [yAxisLabel]="'Elcik Sayısı'" [timeline]="true" [gradient]="true"
                     [results]="dataSource.shiftSeries$ | async" (select)="onSelect($event)">
-                  </ngx-charts-area-chart-stacked>
+                  </ngx-charts-area-chart>
                 </div>
 
               </div>

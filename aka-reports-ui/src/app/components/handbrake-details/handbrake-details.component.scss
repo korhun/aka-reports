@@ -23,7 +23,7 @@
   right: 15px;
   margin-left: auto;
   margin-right: auto;
-  top: 70px;
+  top: 95px;
   bottom: 15px;
 }
 .grid {
@@ -40,7 +40,8 @@
 }
 
 .grid-cell {
-  width: 45%;
+  width: 45vw;
+  max-width: 70vh;
   border-radius: 10px !important;
 }
 
@@ -53,4 +54,7 @@
   max-width: 100% !important;
   width: 100% !important;
 
+}
+.table-type-image {
+  height: 2em;
 }
