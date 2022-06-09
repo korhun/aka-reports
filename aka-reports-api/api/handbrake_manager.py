@@ -433,6 +433,7 @@ def get_handbrake(key):
 
 
 def get_handbrake_details(key):
+    time.sleep(10)
     handbrake = get_handbrake(key)
     res = {
         "key": handbrake["key"],

@@ -163,3 +163,10 @@ ngx-charts-pie-chart {
 .mat-cell:first-child:hover {
   cursor: pointer;
 }
+
+.column-checks {
+  // position: absolute;
+  top: 18px;
+  left: 30px;
+  z-index: 111;
+}

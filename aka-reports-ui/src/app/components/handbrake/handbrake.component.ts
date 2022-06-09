@@ -57,16 +57,41 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
-
   dataSource!: HandbrakeDataSource;
-  displayedColumns = ["has_fault", "scan_date", "fault_names", "barcode_date", "barcode"];
+  displayedColumns: Array<string> = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;
 
   pageSize = 15;
-  pageSizeOptions: number[] = [15, 50, 1000];
+  pageSizeOptions: number[] = [15, 50, 100, 1000];
   optionsForm: FormGroup;
+
+  show_col_scan_date: boolean = true;
+  show_col_fault_names: boolean = true;
+  show_col_barcode_date: boolean = true;
+  show_col_barcode: boolean = true;
+  show_col_changed() {
+    // ["has_fault", "scan_date", "fault_names", "barcode_date", "barcode"]
+    this.displayedColumns = ["has_fault"];
+    if (this.show_col_scan_date) this.displayedColumns.push("scan_date");
+    if (this.show_col_fault_names) this.displayedColumns.push("fault_names");
+    if (this.show_col_barcode_date) this.displayedColumns.push("barcode_date");
+    if (this.show_col_barcode) this.displayedColumns.push("barcode");
+
+    localStorage.setItem("show_col_scan_date", this.show_col_scan_date.toString())
+    localStorage.setItem("show_col_fault_names", this.show_col_fault_names.toString())
+    localStorage.setItem("show_col_barcode_date", this.show_col_barcode_date.toString())
+    localStorage.setItem("show_col_barcode", this.show_col_barcode.toString())
+  }
+
+  init_columns() {
+    this.show_col_scan_date = localStorage.getItem("show_col_scan_date") === "true";
+    this.show_col_fault_names = localStorage.getItem("show_col_fault_names") === "true";
+    this.show_col_barcode_date = localStorage.getItem("show_col_barcode_date") === "true";
+    this.show_col_barcode = localStorage.getItem("show_col_barcode") === "true";
+    this.show_col_changed()
+  }
 
   public get barcodeFilterExists(): boolean {
     const opts: HandbrakeSearchOptions = this.optionsForm.value;
@@ -80,6 +105,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     return !HandbrakeHelper.filterExists(opts)
   }
   constructor(fb: FormBuilder, private handbrakeService: HandbrakeService, private cdr: ChangeDetectorRef, private dialog: MatDialog) {
+    this.init_columns();
     this.optionsForm = fb.group(HandbrakeHelper.createDefaultOptions());
   }
 
@@ -90,6 +116,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       distinctUntilChanged(),
       tap(() => this.loadHandbrakesPage(true))
     ).subscribe();
+
 
     // this.dataSource.handbrakes$.subscribe((handbrakes) => {
     //   if (handbrakes && handbrakes.length>0)
@@ -106,6 +133,11 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
       )
       .subscribe();
 
+    const pageSize = localStorage.getItem('paginator.pageSize')
+    if (pageSize) {
+      this.paginator.pageSize = Number(pageSize)
+    }
+
     this.loadHandbrakesPage(true)
     this.cdr.detectChanges();
   }
@@ -120,6 +152,7 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
     opts.sort_active = this.sort.active;
     opts.page_index = this.paginator.pageIndex;
     opts.page_size = this.paginator.pageSize;
+    localStorage.setItem('paginator.pageSize', this.paginator.pageSize.toString());
     this.dataSource.loadHandbrakes(opts);
   }
 
