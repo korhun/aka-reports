@@ -29,32 +29,6 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   // ref: https://github.com/angular-university/angular-material-course/tree/2-data-table-finished
   // ref: https://swimlane.gitbook.io/ngx-charts/examples/pie-charts/pie-chart
 
-  // fault_pie_chart: any[] = [
-  //   {
-  //     "name": "Germany",
-  //     "value": 8940000
-  //   },
-  //   {
-  //     "name": "USA",
-  //     "value": 5000000
-  //   },
-  //   {
-  //     "name": "France",
-  //     "value": 7200000
-  //   },
-  //     {
-  //     "name": "UK",
-  //     "value": 6200000
-  //   }
-  // ]
-  // view: any[] = [700, 400];
-
-  // // options
-  // gradient: boolean = true;
-  // showLegend: boolean = false;
-  // showLabels: boolean = true;
-  // isDoughnut: boolean = false;
-  // // legendPosition: string = 'below';
   pieLegendPosition: LegendPosition = LegendPosition.Below;
   graphLegendPosition: LegendPosition = LegendPosition.Right;
 
@@ -85,16 +59,13 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
 
 
   dataSource!: HandbrakeDataSource;
-  displayedColumns = ["hasFault", "scan_date", "barcode_date", "barcode"];
+  displayedColumns = ["has_fault", "scan_date", "fault_names", "barcode_date", "barcode"];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;
 
-
-  // length = 0;
   pageSize = 15;
   pageSizeOptions: number[] = [15, 50, 1000];
-
   optionsForm: FormGroup;
 
   public get barcodeFilterExists(): boolean {

@@ -109,10 +109,13 @@
   width: 100%;
 }
 
-.mat-column-hasFault {
+.mat-column-has_fault {
   flex: 0 0 65px;
 }
 .mat-column-scan_date {
+  flex: 0 0 165px;
+}
+.mat-column-fault_names {
   flex: 0 0 165px;
 }
 .mat-column-barcode_date {

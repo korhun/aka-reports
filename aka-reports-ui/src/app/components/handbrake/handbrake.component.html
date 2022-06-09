@@ -51,7 +51,6 @@
                     <input matStartDate placeholder="Başlangıç" formControlName="date_start">
                     <input matEndDate placeholder="Bitiş" formControlName="date_end">
                   </mat-date-range-input>
-                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker></mat-date-range-picker>
 
@@ -80,7 +79,6 @@
                     <input matStartDate placeholder="Başlangıç" formControlName="barcode_date_start">
                     <input matEndDate placeholder="Bitiş" formControlName="barcode_date_end">
                   </mat-date-range-input>
-                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker2></mat-date-range-picker>
                 </mat-form-field>
@@ -111,7 +109,7 @@
                 <mat-table class="handbrakes-table mat-elevation-z8" [dataSource]="dataSource" matSort
                   matSortActive="scan_date" matSortDirection="asc" matSortDisableClear>
 
-                  <ng-container matColumnDef="hasFault" class="handbrake-cell-img">
+                  <ng-container matColumnDef="has_fault" class="handbrake-cell-img">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let handbrake" (click)="onIconClicked(handbrake)">
                       <img [src]="handbrake.imgSrc" class="table-type-image" />
@@ -121,6 +119,11 @@
                   <ng-container matColumnDef="scan_date">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Tarama Tarihi</mat-header-cell>
                     <mat-cell *matCellDef="let handbrake">{{handbrake.scan_date | date:'medium'}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="fault_names">
+                    <mat-header-cell *matHeaderCellDef>Hatalar</mat-header-cell>
+                    <mat-cell *matCellDef="let handbrake">{{handbrake.fault_names}}</mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="barcode_date">
@@ -134,12 +137,7 @@
                   </ng-container>
 
                   <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-
                   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-                  <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'selected': selection.isSelected(row)}" (click)="selection.select(row)"></mat-row> -->
-
-
                 </mat-table>
 
                 <mat-paginator class="mat-elevation-z8" [length]="dataSource.length$ | async" [pageSize]="pageSize"

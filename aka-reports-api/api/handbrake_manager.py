@@ -10,7 +10,7 @@ import dateutil.parser
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-from utils import file_helper, string_helper, image_helper, preview_helper
+from utils import file_helper, string_helper, preview_helper
 from utils.label_file import LabelFile
 
 from dateutil.tz import UTC
@@ -43,6 +43,12 @@ def _label_has_fault(label_fn):
         if label_name.lower() != "hatasız":
             return True
     return False
+
+
+def enumerate_faults(label_fn):
+    for label_name in _enumerate_labels(label_fn):
+        if label_name.lower() != "hatasız":
+            yield label_name
 
 
 def _create_key(barcode, dir_path) -> str:
@@ -85,7 +91,7 @@ def _create_handbrake(barcode, dir_path):
     }
     """
     img_exists = False
-    has_fault = False
+    fault_names = []
     handbrake = {
         "key": _create_key(barcode, dir_path),
         "barcode": barcode
@@ -110,18 +116,20 @@ def _create_handbrake(barcode, dir_path):
                 continue
 
             cam_data["label_fn"] = label_fn
-            if not has_fault:
-                has_fault = _label_has_fault(label_fn)
-
+            for fault in enumerate_faults(label_fn):
+                if fault not in fault_names:
+                    fault_names.append(fault)
         except:  # noqa
             logging.exception(sys.exc_info()[2])
 
+    has_fault = len(fault_names) > 0
     if not img_exists:
         return None
     handbrake["scan_date"] = datetime.datetime.fromtimestamp(min(times)).isoformat()
     handbrake["barcode_date"] = _get_datetime_from_barcode(barcode)
     handbrake["type"] = barcode_type(barcode)
     handbrake["has_fault"] = has_fault
+    handbrake["fault_names"] = ", ".join(fault_names)
     return handbrake
 
 
@@ -207,6 +215,7 @@ def get_handbrake_info(handbrake, options):
         "scan_date": handbrake["scan_date"],
         "barcode_date": handbrake["barcode_date"],
         "has_fault": handbrake["has_fault"],
+        "fault_names": handbrake["fault_names"],
         "type": handbrake["type"],
     }
     return res
@@ -249,12 +258,12 @@ def search(options):
                 if scan_date > end:
                     return False
 
-            hour = scan_date.astimezone().hour
-            if not date_shift1 and 8 < hour < 16:
+            scan_hour = scan_date.astimezone().hour
+            if not date_shift1 and 8 < scan_hour < 16:
                 return False
-            if not date_shift2 and 16 < hour:
+            if not date_shift2 and 16 < scan_hour:
                 return False
-            if not date_shift3 and hour < 8:
+            if not date_shift3 and scan_hour < 8:
                 return False
 
         if barcode_date_start or barcode_date_end:
@@ -435,4 +444,3 @@ def get_handbrake_details(key):
         "cams": preview_helper.get_preview(handbrake),
     }
     return res
-

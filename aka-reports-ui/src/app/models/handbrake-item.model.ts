@@ -4,6 +4,7 @@ export interface HandbrakeItem {
   key: string;
   barcode: string;
   has_fault: boolean;
+  fault_names: string;
   scan_date: Date;
   barcode_date: Date;
   type: string;
@@ -47,6 +48,7 @@ export interface HandbrakeDetails {
   key: string;
   barcode: string;
   has_fault: boolean;
+  fault_names: string;
   scan_date?: any,
   barcode_date?: any,
   type: string;
@@ -74,6 +76,7 @@ export class HandbrakeHelper {
       key: "",
       barcode: "",
       has_fault: false,
+      fault_names: "",
       scan_date: null,
       barcode_date: null,
       type: "",
@@ -148,15 +151,7 @@ export class HandbrakeHelper {
   }
 
   public static validateHandbrake(obj: HandbrakeItem): void {
-    // if (obj.barcode == null)
-    //     obj.barcode = ""
-    // if (obj.has_fault == null)
-    //     obj.has_fault = false;
-    // if (obj.date == null)
-    //     obj.date = new Date('0001-01-01T00:00:00Z');
-
     obj.imgSrc = "/assets/img/$.png".replace("$", obj.has_fault ? obj.type + "_err" : obj.type)
-    // obj.imgSrc = "/assets/img/$.png".replace("$", obj.type + "_err" : obj.type)
   }
 
   public static getHandbrakeSearchResult(obj: object): HandbrakeSearchResult {
