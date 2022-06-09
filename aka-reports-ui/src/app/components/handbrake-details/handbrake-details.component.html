@@ -2,14 +2,19 @@
   <mat-icon class="close-icon" color="warn">close</mat-icon>
 </button>
 
-<h2 mat-dialog-title><img [src]="handbrakeItem.imgSrc" class="table-type-image" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{handbrakeItem.barcode}}</h2>
-<div mat-dialog-content class="details-container" *ngIf="(imgPaths$ | async) as imgPaths">
+<h2 mat-dialog-title><img [src]="handbrakeItem.imgSrc"
+    class="table-type-image" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{handbrakeItem.barcode}}</h2>
 
+<div class="spinner-container" *ngIf="loading$ | async">
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
+<div mat-dialog-content class="details-container" *ngIf="(imgPaths$ | async) as imgPaths">
   <div class="grid-container">
     <div class="grid">
       <div *ngFor="let imgPath of imgPaths | keyvalue" class="grid-cell">
         <!-- <img src="{{'data:image/jpg;base64,' + imgPath.value}}" class="cam-img" (click)="openFullscreen($event)"/> -->
-        <img src="{{'data:image/jpg;base64,' + imgPath.value}}" class="cam-img" (click)="openFullscreen($event)"/>
+        <img src="{{'data:image/jpg;base64,' + imgPath.value}}" class="cam-img" (click)="openFullscreen($event)" />
         <mat-icon class="fullscreen-ico" (click)="openFullscreen($event)">fullscreen</mat-icon>
       </div>
     </div>

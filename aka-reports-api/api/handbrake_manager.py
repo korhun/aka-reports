@@ -38,16 +38,16 @@ def _enumerate_labels(label_fn):
             del label
 
 
-def _label_has_fault(label_fn):
-    for label_name in _enumerate_labels(label_fn):
-        if label_name.lower() != "hatasız":
-            return True
-    return False
+# def _label_has_fault(label_fn):
+#     for label_name in _enumerate_labels(label_fn):
+#         if label_name.lower() != "hatasiz":
+#             return True
+#     return False
 
 
 def enumerate_faults(label_fn):
     for label_name in _enumerate_labels(label_fn):
-        if label_name.lower() != "hatasız":
+        if label_name.lower() not in ["hatasiz", "hatasız"]:
             yield label_name
 
 
@@ -433,7 +433,6 @@ def get_handbrake(key):
 
 
 def get_handbrake_details(key):
-    time.sleep(10)
     handbrake = get_handbrake(key)
     res = {
         "key": handbrake["key"],

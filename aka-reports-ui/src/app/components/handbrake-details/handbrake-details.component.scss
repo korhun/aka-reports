@@ -66,3 +66,20 @@
   transform: scale(2);
   color: white !important;
 }
+
+
+.spinner-container {
+  position: relative;
+  width: 100%;
+  height: 0px;
+  text-align: center;
+}
+
+.spinner-container mat-spinner {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0px;
+  padding-top: 20em;
+
+  width: 15em;
+}
