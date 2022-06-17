@@ -86,10 +86,10 @@ export class HandbrakeComponent implements OnInit, AfterViewInit {
   }
 
   init_columns() {
-    this.show_col_scan_date = localStorage.getItem("show_col_scan_date") === "true";
-    this.show_col_fault_names = localStorage.getItem("show_col_fault_names") === "true";
-    this.show_col_barcode_date = localStorage.getItem("show_col_barcode_date") === "true";
-    this.show_col_barcode = localStorage.getItem("show_col_barcode") === "true";
+    this.show_col_scan_date = localStorage.getItem("show_col_scan_date") != "false";
+    this.show_col_fault_names = localStorage.getItem("show_col_fault_names") != "false";
+    this.show_col_barcode_date = localStorage.getItem("show_col_barcode_date") != "false";
+    this.show_col_barcode = localStorage.getItem("show_col_barcode") != "false";
     this.show_col_changed()
   }
 

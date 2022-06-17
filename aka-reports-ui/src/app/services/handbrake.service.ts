@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, of, debounceTime } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { HandbrakeItem, HandbrakeHelper, HandbrakeSearchOptions, HandbrakeSearchResult, HandbrakeDetails } from "../models/handbrake-item.model";
+import { environment } from "src/environments/environment";
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class HandbrakeService {
 
 
   private _findHandbrakes(options: HandbrakeSearchOptions): Observable<any> {
-    return this.http.get('/api/handbrakes', {
+    return this.http.get(environment.apiUrl + '/api/handbrakes', {
       params: new HttpParams()
         .set('options', JSON.stringify(options))
     });
@@ -28,7 +30,7 @@ export class HandbrakeService {
   }
 
   getHandbrakeDetails(key:string): Observable<HandbrakeDetails>{
-    return this.http.get('/api/handbrake', {
+    return this.http.get(environment.apiUrl + '/api/handbrake', {
       params: new HttpParams()
         .set('key', key)
     }).pipe(

@@ -151,7 +151,7 @@ export class HandbrakeHelper {
   }
 
   public static validateHandbrake(obj: HandbrakeItem): void {
-    obj.imgSrc = "/assets/img/$.png".replace("$", obj.has_fault ? obj.type + "_err" : obj.type)
+    obj.imgSrc = "assets/img/$.png".replace("$", obj.has_fault ? obj.type + "_err" : obj.type)
   }
 
   public static getHandbrakeSearchResult(obj: object): HandbrakeSearchResult {
